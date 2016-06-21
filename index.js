@@ -11,7 +11,7 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
-  app.use('/static', express.static('index'))
+  app.use('/static', express.static('indexx'))
   response.send('Hello00 World!')
 })
 
