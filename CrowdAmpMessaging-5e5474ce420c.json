@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "crowdamp-messaging",
+  "private_key_id": "5e5474ce420c0362ddf0c1a0d5f241dae74494ff",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCliwW9o/opPqm+\nXp348oICICfa5i1TEZTUgJPVD+UOlTVq+/b0DXg9Z518hAY7cSkzTLPDj72vQQOn\nWHD3863cIRtumxsdrmxYX9pOKcpNyU5ARlFXMkFKFC44OoG60nx/WjHajAfmXwoR\nU8etZsQ3siBngMmfXQyMqX1fneF7gW3NCq3MpfTbydOFhGlsu/WKc12r3NHBP8zB\nYXc8KBAbPiUdd40jeCIYE5Wn92enqp6LCOXZGVLIwZomc+OZH9jL4YYCfZ3qB7qU\naUUjFY4Pq6zFg19aKcIDm8KwjKywIDrConn/jCb/sD9Qod2x8iHpWxhZPDVzMggY\nNn8fF+KvAgMBAAECggEAXCD/w+fTXErkeu77acXE9tvgcmGxjc52DsG0BFqBNtlx\nTiYF7RLl/P6CVf6/3SsAK+2fCdIgVb2QA/0jecri0mSWeLrXn3AoGhLWUrPNQ/cp\nlnnL4QQ1871Bb8eX1Vo5MUMIBcHyz5HK75O5x9Yuk3SNtiyliQxm5I2bGbCrAWlA\n6wFgJlWLIydVnazuQM0rggleMYAqxaww++FC1ApszcUDRoZYfPg2k/x6yt4gRg3X\njiPrGiNiB+chHgzifgcFbLxZRLHdgE6oSIBh4H9rCQkX8Tgxs/XaYK78EybsKDuG\nfjXehWU9TuFFpLtJoyb89zTnQ/gD7BNPNslDUwfxSQKBgQD1z96jY/tZ6WmQbgQb\nURlLuq77RJUDsdEyxtoka9qVPqT5twKbsarZIlNsiZp6hHdoIa2Xx9K6lM+5o5ma\nisfq7F5iKGw41UIi0jJsg/gDbOlsp8fUdV5AbBpCBAdlhVGZf71moOI3AHUjKccD\nPgda2YS1/N16X5kfDh1rjbQlhQKBgQCsZ3pkNehwOZRQ13wtslP47VThdAuaG4o1\njUVVfFrdtRcb8qegX8eL9f0mOXFEHUStpD3oe5EB9FwNNpQQiJSz3Rlvfn3V2G3o\nn0bMJlpynve6P+njio5iIutnxRnNdWRhQDmgifN0lwuhaZOzQ2QgWQnShgoKpioG\nGp/EpwizowKBgQCftcitFmgYWhyZl7GZYg7yckAAx+Wd+em3eRYA9gaWU5ZzHSJX\nsI8V90SGz70L/4dppAAbDtzvF4MD1bUWgTc1fxAv7J2sK3uGDlZuxSveZeQgEb83\nXm63osVIwT9hCccj2ahgxwVTwTtadml0xNeYgp3EdKAeQ4DEebJJ0E8M1QKBgQCD\nZSomjd9lCL09D74YpbzSDy+N1H+zKCIhxlV9XZVzO70tE7clx1myFfyl0Um9/ACH\nxpFYSjSuJKqzd1FJeI68tlnYW7NT8+twS1QN630rtnRfgq6jOMpjiPGY2ONdb4bd\nh7Fj5T+jMCsxDeH/0fDRpoqR5I5qp1GH7Wqu2g8LuQKBgQDzcfRcZaUEcurmJdCp\n5O+1II0/Ui8+NFP70qHcqPej2Ei2uJHe7LrDk7CJ3DDq6YqwsHb52q/FLB3VdP0M\nB25EaJnCcTrmeA2S+ZI9BehNe7OlvKZpADsdhpeqi757Y7/+lbwp7UUyApxzep93\nyDJp7WeZntsP4USgyNgzcao6BQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "crowdampmessaging@crowdamp-messaging.iam.gserviceaccount.com",
+  "client_id": "109109193102227061374",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/crowdampmessaging%40crowdamp-messaging.iam.gserviceaccount.com"
+}
