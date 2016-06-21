@@ -11,7 +11,4 @@
   };
   firebase.initializeApp(config);
 </script>
-<head>
-        <title>Helooooo</title>
-</head>
 </html>
