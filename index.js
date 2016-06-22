@@ -68,7 +68,7 @@ function startListeners() {
 function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
   if(itemId) {
     console.log("Adding Item to Firebase with id: " + itemId)
-    messageRef = firebase.database().ref(snapshotPath).child(itemId)
+    messageRef = firebase.database().ref(snapshotPath).push()
     messageRef.set(messageItem)
   } else {
     messageRef = firebase.database().ref(snapshotPath).push()
