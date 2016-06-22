@@ -123,7 +123,7 @@ app.post('/twiliowebhook/', function (req, res) {
 });
 
 function sendMessageThroughTwilio(to, from) {
-client.messages.create({ 
+twilio.messages.create({ 
     to: to, 
     from: from, 
     body: "Hey Jenny! Good luck on the bar exam!", 
