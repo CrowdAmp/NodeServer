@@ -81,7 +81,7 @@ function sendPushNotification(userIds, content) {
     contents: {
       'en': content
     },
-    include_player_ids: ,
+    include_player_ids: ["8e70c1e0-d3ce-43a7-8a69-79477762bf33"],
     isIos: true
   };
   onesignal_client.notifications.create(restApiKey, params, function (err, response) {
