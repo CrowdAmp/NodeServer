@@ -129,8 +129,9 @@ app.post('/twiliowebhook/', function (req, res) {
             body = "*User Sent Image*"
     }
     console.log("From: " + req.body.From)
+    console.log(phoneNumberToInfluencerIdDict[req.body.To])
+    console.log(req.body.To)
     if(phoneNumberToInfluencerIdDict[req.body.To]) {
-      console.log("asdfasdfasdfasdfasdfasdfsdfasdfafdsafsad")
       phoneNumberInfoDict = {
             "text": req.body.Body,
             "senderId": userId,
