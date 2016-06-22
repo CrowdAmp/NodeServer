@@ -133,7 +133,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
       } else {
         console.log(err)
       }
-    }
+    })
   } else {
     twilio.messages.create({ 
         to: to, 
@@ -152,82 +152,6 @@ function sendMessageThroughTwilio(to, from, text, media) {
 }
 
 
-
-function sendTwilioMessage(pageID, senderID, content, type) {
-  console.log("SENDING TWILLIO MESSAGE: "+ pageID)
-  var sentMessages = 0
-  var totalMessages = Math.floor(content.length/155)
-  if (content.length % 155 != 0) {
-    totalMessages += 1 
-  }
-
-  var splitContent = content.split(" ") 
-  console.log("Split content: "+ splitContent)
-  console.log(splitContent.length)
-  var nextMessage = splitContent[0]
-  for (var i = 1; i < splitContent.length; i++) {
-    console.log(nextMessage)
-    if (nextMessage.length + splitContent[i].length + 1 < 155) {
-      nextMessage += " " + splitContent[i]
-    } else {
-      console.log("did send segmented message: " + nextMessage)
-      sentMessages++
-        sendMessageRequestToTwilio(pageID, senderID, nextMessage + " " + sentMessages.toString() + "/" + totalMessages.toString() , type)
-      nextMessage = splitContent[i]
-    }
-  }
-
-  if (nextMessage.length != 0){
-    if (totalMessages > 1) {
-      sentMessages++
-      nextMessage = nextMessage + " " + sentMessages.toString() + "/" + totalMessages.toString()
-    }
-      sendMessageRequestToTwilio(pageID, senderID, nextMessage , type)
-  }
-
-}
-
-
-function sendMessageRequestToTwilio(pageID, senderID, content, type) {
-  sendPostRequestToBrain('didSendMessage', pageID, senderID, content, type, function(response) {// endpoint, pageID, messagedUsers, content, type, resultHandler
-    console.log("Post Request response: " + response.reply)
-  })
-  if (type == 'text'){
-    twilio.sendMessage({
-//    twilio.sms.messages.create({
-      to:senderID,
-      from:pageID,
-      body: content
-  }, function(error, message) {
-      if (!error) {
-          console.log('Success! The SID for this SMS message is:');
-          console.log(message.sid);
-          console.log('Message sent on:');
-          console.log(message.dateCreated);
-      } else {
-          console.log('Oops! There was an error.');
-      }
-  });
-  } else if(type == 'image'){
-      twilio.sendMessage({
-        to:senderID,
-        mediaUrl: content,
-        from:pageID
-
-    }, function(error, message) {
-        if (!error) {
-            console.log('Success! The SID for this SMS message is:');
-            console.log(message.sid);
-            console.log('Message sent on:');
-            console.log(message.dateCreated);
-        } else {
-            console.log('Oops! There was an error.');
-          console.log(error)
-        }
-    })
-  }
-
-}
 
 
 
