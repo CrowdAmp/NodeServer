@@ -114,6 +114,7 @@ app.post('/twiliowebhook/', function (req, res) {
         if (body == "") {
                 body = "*User Sent Image*"
         }
+        console.log("From: " + req.body.From)
         sendMessageThroughTwilio(req.body.To, req.body.From)
         console.log("message number" + req.body.From)
         res.sendStatus(203)
