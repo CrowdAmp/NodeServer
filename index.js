@@ -6,7 +6,7 @@ var nodemailer = require('nodemailer');
 var schedule = require('node-schedule');
 var Promise = require('promise');
 var escape = require('escape-html');
-
+var bodyParser = require('body-parser')
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
@@ -191,7 +191,10 @@ function sendMessageRequestToTwilio(pageID, senderID, content, type) {
 
 
 
-app.use(express.bodyParser());
+app.use(bodyParser.json());                        
+
+    // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 startListeners();
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
