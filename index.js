@@ -13,7 +13,7 @@ var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var app = express()
 
 var phoneNumberToInfluencerIdDict = {
-  "+9804304321" : "AlexRamos"
+  "+19804304321" : "AlexRamos"
 }
 
 app.use(bodyParser.urlencoded({ extended: false }))
