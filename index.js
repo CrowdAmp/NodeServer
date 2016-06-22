@@ -96,6 +96,7 @@ function sendPushNotification(userIds, content) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
+        console.log("AAAAAAA")
         console.log("req: " + req)
         console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
