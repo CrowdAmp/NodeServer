@@ -61,11 +61,17 @@ function startListeners() {
     var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
     console.log(snapshotPath)
 		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-    		
 			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
     		console.log(snapshot.child("text").val())
         console.log("senderId: " + snapshot.child("senderId").val())
+        var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
+        if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
+          sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), "")
+          addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
+        }
+
         console.log(userContactInfoDict[snapshot.child("senderId").val()])
+
 		})
   });
   console.log("starting listener")
@@ -148,13 +154,13 @@ app.post('/twiliowebhook/', function (req, res) {
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, phoneNumberInfoDict)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+19804304321")
-       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
+      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
 
 
     }
 
 
-    sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
+    //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
     res.send()
       
