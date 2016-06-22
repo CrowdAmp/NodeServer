@@ -114,18 +114,28 @@ app.post('/twiliowebhook/', function (req, res) {
         if (body == "") {
                 body = "*User Sent Image*"
         }
-        sendTwilioMessage()
+        sendMessageThroughTwilio(req.Body.To, req.body.From)
         console.log("message number" + req.body.From)
-        sendTwilioMessage(req.Body.To, req.body.From, req.body.Body, 'text')
         res.sendStatus(203)
       
         //res.sendStatus(200)                                                                                                                   
 });
 
+sendMessageThroughTwilio(to, from) {
+client.messages.create({ 
+    to: to, 
+    from: from, 
+    body: "Hey Jenny! Good luck on the bar exam!", 
+    mediaUrl: "http://farm2.static.flickr.com/1075/1404618563_3ed9a44a3a.jpg",  
+}, function(err, message) { 
+    console.log(message.sid); 
+});
+
+}
+
+
 
 function sendTwilioMessage(pageID, senderID, content, type) {
-
-    sendMessageRequestToTwilio(pageID, senderID, nextMessage , type)
   console.log("SENDING TWILLIO MESSAGE: "+ pageID)
   var sentMessages = 0
   var totalMessages = Math.floor(content.length/155)
@@ -161,6 +171,9 @@ function sendTwilioMessage(pageID, senderID, content, type) {
 
 
 function sendMessageRequestToTwilio(pageID, senderID, content, type) {
+  sendPostRequestToBrain('didSendMessage', pageID, senderID, content, type, function(response) {// endpoint, pageID, messagedUsers, content, type, resultHandler
+    console.log("Post Request response: " + response.reply)
+  })
   if (type == 'text'){
     twilio.sendMessage({
 //    twilio.sms.messages.create({
