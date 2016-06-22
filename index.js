@@ -122,18 +122,32 @@ app.post('/twiliowebhook/', function (req, res) {
 });
 
 function sendMessageThroughTwilio(to, from, text, media) {
-twilio.messages.create({ 
-    to: to, 
-    from: from, 
-    body: text,
-    mediaUrl: media
-}, function(err, message) { 
-  if (!err) {
-    console.log(message.sid); 
+  if (media == "") {
+    twilio.messages.create({ 
+      to: to, 
+      from: from, 
+      body: text
+    }, function(err, message) { 
+      if (!err) {
+        console.log(message.sid); 
+      } else {
+        console.log(err)
+      }
+    }
   } else {
-    console.log(err)
+    twilio.messages.create({ 
+        to: to, 
+        from: from, 
+        body: text,
+        mediaUrl: media
+    }, function(err, message) { 
+      if (!err) {
+        console.log(message.sid); 
+      } else {
+        console.log(err)
+      }
+    });
   }
-});
 
 }
 
