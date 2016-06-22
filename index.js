@@ -107,7 +107,6 @@ app.post('/twiliowebhook/', function (req, res) {
         if (body == "") {
                 body = "*User Sent Image*"
         }
-        textProcessor.didReceiveMessage(req.body.To, req.body.From,"text", body )
 
         console.log("message number" + req.body.From)
 
