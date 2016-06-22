@@ -69,10 +69,10 @@ function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
   if(itemId) {
     console.log("Adding Item to Firebase with id: " + itemId)
     messageRef = firebase.database().ref(referencePath).child(itemId)
-    messageRef.set(messageItem)
+    messageRef.set(itemDictionary)
   } else {
     messageRef = firebase.database().ref(referencePath).push()
-    messageRef.set(messageItem)
+    messageRef.set(itemDictionary)
   }
 }
 
