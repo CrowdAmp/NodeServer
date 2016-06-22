@@ -129,11 +129,10 @@ twilio.messages.create({
     body: "Hey Jenny! Good luck on the bar exam!", 
     mediaUrl: "http://farm2.static.flickr.com/1075/1404618563_3ed9a44a3a.jpg",  
 }, function(err, message) { 
-    if (err != undefined) {
-      print error
-    } else {
-      console.log(message.sid); 
-    }
+  if (!err) {
+    console.log(message.sid); 
+  } else {
+    console.log(err)
   }
 });
 
