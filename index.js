@@ -56,7 +56,6 @@ app.listen(app.get('port'), function() {
 
 function startListeners() {
   firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
-    console.log(userContactInfoDict)
     userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
 
     var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
@@ -65,8 +64,11 @@ function startListeners() {
 			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
     		console.log(snapshot.child("text").val())
         console.log("senderId: " + snapshot.child("senderId").val())
+        console.log(userContactInfoDict)
+
         var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
         if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
+          console.log("should forward message")
           sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), "")
           addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
         }
