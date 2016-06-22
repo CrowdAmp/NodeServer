@@ -108,16 +108,16 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
-        res.sendStatus(203)
         console.log("AAAAAAA")
         console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
         if (body == "") {
                 body = "*User Sent Image*"
         }
-
+        sendTwilioMessage()
         console.log("message number" + req.body.From)
-
+        sendTwilioMessage(req.Body.To, req.body.From, req.body.Body, 'text')
+        res.sendStatus(203)
       
         //res.sendStatus(200)                                                                                                                   
 });
@@ -161,9 +161,6 @@ function sendTwilioMessage(pageID, senderID, content, type) {
 
 
 function sendMessageRequestToTwilio(pageID, senderID, content, type) {
-  sendPostRequestToBrain('didSendMessage', pageID, senderID, content, type, function(response) {// endpoint, pageID, messagedUsers, content, type, resultHandler
-    console.log("Post Request response: " + response.reply)
-  })
   if (type == 'text'){
     twilio.sendMessage({
 //    twilio.sms.messages.create({
