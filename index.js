@@ -121,7 +121,7 @@ app.post('/twiliowebhook/', function (req, res) {
         //res.sendStatus(200)                                                                                                                   
 });
 
-sendMessageThroughTwilio(to, from) {
+function sendMessageThroughTwilio(to, from) {
 client.messages.create({ 
     to: to, 
     from: from, 
