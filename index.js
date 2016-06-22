@@ -10,7 +10,7 @@ var escape = require('escape-html');
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
-var MobileDetect = require('mobile-detect')
+
 
 var messageCount = 0
 
@@ -96,6 +96,7 @@ function sendPushNotification(userIds, content) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
+        console.log("req: " + req)
         console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
         if (body == "") {
