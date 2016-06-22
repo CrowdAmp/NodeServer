@@ -130,6 +130,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     console.log("From: " + req.body.From)
     if(phoneNumberToInfluencerIdDict[req.body.To]) {
+      console.log("asdfasdfasdfasdfasdfasdfsdfasdfafdsafsad")
       phoneNumberInfoDict = {
             "text": req.body.Body,
             "senderId": userId,
