@@ -67,10 +67,11 @@ function startListeners() {
 //If itemId is undefined, adds with auto generated id
 function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
   if(itemId) {
+    console.log("Adding Item to Firebase with id: " + itemId)
     messageRef = firebase.database().ref(snapshotPath).child(itemId)
     messageRef.set(messageItem)
   } else {
-    messageRef = firebase.database().ref(snapshotPath).child(push)
+    messageRef = firebase.database().ref(snapshotPath).push())
     messageRef.set(messageItem)
   }
 }
@@ -120,7 +121,7 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
         //res.sendStatus(200)                                                                                                                   
 });
 
-
+//receives inbound message requests from twilio
 app.post('/twiliowebhook/', function (req, res) {
     console.log("MESSAGE BODY " + req.body.Body)
     var body = req.body.Body
