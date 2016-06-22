@@ -71,7 +71,7 @@ function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
     messageRef = firebase.database().ref(snapshotPath).child(itemId)
     messageRef.set(messageItem)
   } else {
-    messageRef = firebase.database().ref(snapshotPath).push())
+    messageRef = firebase.database().ref(snapshotPath).push()
     messageRef.set(messageItem)
   }
 }
