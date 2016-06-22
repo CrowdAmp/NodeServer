@@ -108,25 +108,25 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
-        console.log("AAAAAAA")
         console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
         if (body == "") {
                 body = "*User Sent Image*"
         }
         console.log("From: " + req.body.From)
-        sendMessageThroughTwilio(req.body.From, req.body.To)
+        sendMessageThroughTwilio(req.body.From, req.body.To, "This is a message", "")
         console.log("message number" + req.body.From)
         res.send()
       
         //res.sendStatus(200)                                                                                                                   
 });
 
-function sendMessageThroughTwilio(to, from) {
+function sendMessageThroughTwilio(to, from, text, media) {
 twilio.messages.create({ 
     to: to, 
     from: from, 
-    body: "Hey Jenny! Good luck on the bar exam! one two three four five six seven eight nine ten 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 aaaaaaasasasasasasasasasasasasasasasasasasa sdsdsdsdsdsdsdsdsdsdsdsdsdsds sjfsjkdhflajhfljasdhfljashflkasdhflkjasdhflkjasdhfljasdhflkjasdhflkjasdhflkjasdhflkjashlfjahsldjfhasdlkjfhlakjsdhfljasdhflkjadshflkjasdhflkjasdhflkjasdhflkjasdhfjklasdhflkjasdhflkjasdhflkjasdhflkjasdhflkjasdhflkjasdhfljkasdhflkjashflkjasdhflkajsdfhlaskdfhla" 
+    body: text,
+    mediaUrl: media
 }, function(err, message) { 
   if (!err) {
     console.log(message.sid); 
