@@ -68,10 +68,10 @@ function startListeners() {
 function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
   if(itemId) {
     console.log("Adding Item to Firebase with id: " + itemId)
-    messageRef = firebase.database().ref(snapshotPath).push()
+    messageRef = firebase.database().ref(referencePath).child(itemId)
     messageRef.set(messageItem)
   } else {
-    messageRef = firebase.database().ref(snapshotPath).push()
+    messageRef = firebase.database().ref(referencePath).push()
     messageRef.set(messageItem)
   }
 }
@@ -129,8 +129,6 @@ app.post('/twiliowebhook/', function (req, res) {
             body = "*User Sent Image*"
     }
     console.log("From: " + req.body.From)
-    console.log(phoneNumberToInfluencerIdDict[req.body.To])
-    console.log(req.body.To)
     if(phoneNumberToInfluencerIdDict[req.body.To]) {
       phoneNumberInfoDict = {
             "text": req.body.Body,
