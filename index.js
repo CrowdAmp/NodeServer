@@ -98,7 +98,7 @@ function sendPushNotification(userIds, content) {
 app.post('/twiliowebhook/', function (req, res) {
         console.log("AAAAAAA")
         console.log("req: " + req)
-        console.log("MESSAGE BODY " + req.body.Body)
+        console.log("MESSAGE BODY " + req.Body.Body)
         var body = req.body.Body
         if (body == "") {
                 body = "*User Sent Image*"
