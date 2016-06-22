@@ -115,7 +115,7 @@ app.post('/twiliowebhook/', function (req, res) {
                 body = "*User Sent Image*"
         }
         console.log("From: " + req.body.From)
-        sendMessageThroughTwilio(req.body.To, req.body.From)
+        sendMessageThroughTwilio(req.body.From, req.body.To)
         console.log("message number" + req.body.From)
         res.sendStatus(203)
       
@@ -129,7 +129,12 @@ twilio.messages.create({
     body: "Hey Jenny! Good luck on the bar exam!", 
     mediaUrl: "http://farm2.static.flickr.com/1075/1404618563_3ed9a44a3a.jpg",  
 }, function(err, message) { 
-    console.log(message.sid); 
+    if (err != undefined) {
+      print error
+    } else {
+      console.log(message.sid); 
+    }
+  }
 });
 
 }
