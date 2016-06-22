@@ -135,6 +135,7 @@ app.post('/twiliowebhook/', function (req, res) {
             "senderId": req.body.From,
             "sentByUser": false,
             "type": "text",
+            "fileName": "",
             "messageSentTo": req.body.From,
             "messageSentFromApp": false //Should change to one of 100 phone numbers
         }
@@ -142,7 +143,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
 
 
-    sendMessageThroughTwilio(req.body.From, req.body.To, "This is a message", "")
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
     res.send()
       
