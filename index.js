@@ -97,7 +97,7 @@ function sendPushNotification(userIds, content) {
 
 app.post('/twiliowebhook/', function (req, res) {
         console.log("AAAAAAA")
-        console.log("MESSAGE BODY " + req.query.Body)
+        console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
         if (body == "") {
                 body = "*User Sent Image*"
@@ -186,8 +186,12 @@ function sendMessageRequestToTwilio(pageID, senderID, content, type) {
         }
     })
   }
+
 }
 
+app.configure(function(){
+  app.use(express.bodyParser());
+});
 
 
 startListeners();
