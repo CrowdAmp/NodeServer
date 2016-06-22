@@ -189,12 +189,11 @@ function sendMessageRequestToTwilio(pageID, senderID, content, type) {
 
 }
 
-app.configure(function(){
-  app.use(express.bodyParser());
-});
 
 
+app.use(express.bodyParser());
 startListeners();
+
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
 
