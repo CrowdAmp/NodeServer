@@ -99,6 +99,13 @@ function sendPushNotification(userIds, content) {
 }
 
 
+app.post('/twiliowebhookoutbound/', function (req, res) {
+
+
+        res.send()
+        //res.sendStatus(200)                                                                                                                   
+});
+
 
 app.post('/twiliowebhook/', function (req, res) {
         console.log("AAAAAAA")
