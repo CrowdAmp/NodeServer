@@ -10,8 +10,11 @@ var bodyParser = require('body-parser')
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
-
 var app = express()
+
+var phoneNumberToInfluencerIdDict = {
+  "+9804304321" : "AlexRamos"
+}
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -60,6 +63,17 @@ function startListeners() {
   console.log("starting listener")
 }
 
+//Adds item to firebase database referencePath is a string, itemDictionary is a dict, and itemId is string. No return value.
+//If itemId is undefined, adds with auto generated id
+function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
+  if(itemId) {
+    messageRef = firebase.database().ref(snapshotPath).child(itemId)
+    messageRef.set(messageItem)
+  } else {
+    messageRef = firebase.database().ref(snapshotPath).child(push)
+    messageRef.set(messageItem)
+  }
+}
 
 function sendMessageToUser(snapshotPath,userId, messageContent, messageType) {
   messageRef = firebase.database().ref(snapshotPath).push()
@@ -108,15 +122,30 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
-        console.log("MESSAGE BODY " + req.body.Body)
-        var body = req.body.Body
-        if (body == "") {
-                body = "*User Sent Image*"
+    console.log("MESSAGE BODY " + req.body.Body)
+    var body = req.body.Body
+    if (body == "") {
+            body = "*User Sent Image*"
+    }
+    console.log("From: " + req.body.From)
+    if(phoneNumberToInfluencerIdDict[req.body.To]) {
+      phoneNumberInfoDict = {
+            "text": req.body.Body,
+            "senderId": userId,
+            "sentByUser": false,
+            "type": "text",
+            "fileName": req.body.MediaUrl,
+            "messageSentTo": req.body.From,
+            "messageSentFrom": req.body.To //Should change to one of 100 phone numbers
         }
-        console.log("From: " + req.body.From)
-        sendMessageThroughTwilio(req.body.From, req.body.To, "This is a message", "")
-        console.log("message number" + req.body.From)
-        res.send()
+      }
+      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData", req.body.From, undefined)
+    }
+
+
+    sendMessageThroughTwilio(req.body.From, req.body.To, "This is a message", "")
+    console.log("message number" + req.body.From)
+    res.send()
       
         //res.sendStatus(200)                                                                                                                   
 });
@@ -150,7 +179,6 @@ function sendMessageThroughTwilio(to, from, text, media) {
   }
 
 }
-
 
 
 
