@@ -126,7 +126,7 @@ function sendMessageThroughTwilio(to, from) {
 twilio.messages.create({ 
     to: to, 
     from: from, 
-    body: "Hey Jenny! Good luck on the bar exam! one two three four five six seven eight nine ten 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 aaaaaaasasasasasasasasasasasasasasasasasasa sdsdsdsdsdsdsdsdsdsdsdsdsdsds"
+    body: "Hey Jenny! Good luck on the bar exam! one two three four five six seven eight nine ten 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 aaaaaaasasasasasasasasasasasasasasasasasasa sdsdsdsdsdsdsdsdsdsdsdsdsdsds sjfsjkdhflajhfljasdhfljashflkasdhflkjasdhflkjasdhfljasdhflkjasdhflkjasdhflkjasdhflkjashlfjahsldjfhasdlkjfhlakjsdhfljasdhflkjadshflkjasdhflkjasdhflkjasdhflkjasdhfjklasdhflkjasdhflkjasdhflkjasdhflkjasdhflkjasdhflkjasdhfljkasdhflkjashflkjasdhflkajsdfhlaskdfhla" 
 }, function(err, message) { 
   if (!err) {
     console.log(message.sid); 
