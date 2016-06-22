@@ -56,6 +56,7 @@ app.listen(app.get('port'), function() {
 
 function startListeners() {
   firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
+    console.log(userContactInfoDict)
     userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
 
     var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
