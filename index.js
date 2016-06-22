@@ -134,12 +134,12 @@ app.post('/twiliowebhook/', function (req, res) {
     if(phoneNumberToInfluencerIdDict[req.body.To]) {
       phoneNumberInfoDict = {
             "text": req.body.Body,
-            "senderId": userId,
+            "senderId": req.body.From,
             "sentByUser": false,
             "type": "text",
             "fileName": req.body.MediaUrl,
             "messageSentTo": req.body.From,
-            "messageSentFrom": req.body.To //Should change to one of 100 phone numbers
+            "messageSentFromApp": false //Should change to one of 100 phone numbers
         }
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData", req.body.From, phoneNumberInfoDict)
     }
