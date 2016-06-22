@@ -138,7 +138,6 @@ app.post('/twiliowebhook/', function (req, res) {
             "messageSentTo": req.body.From,
             "messageSentFrom": req.body.To //Should change to one of 100 phone numbers
         }
-      }
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData", req.body.From, undefined)
     }
 
