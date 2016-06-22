@@ -108,7 +108,7 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
 
 
 app.post('/twiliowebhook/', function (req, res) {
-        res.sendStatus(304)
+        res.sendStatus(201)
         console.log("AAAAAAA")
         console.log("MESSAGE BODY " + req.body.Body)
         var body = req.body.Body
