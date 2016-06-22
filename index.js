@@ -58,6 +58,7 @@ function startListeners() {
     		
 			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
     		console.log(snapshot.child("text").val())
+        console.log(snapshot.parent().key())
 		})
   });
   console.log("starting listener")
