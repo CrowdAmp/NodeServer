@@ -15,6 +15,10 @@ var app = express()
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos"
 }
+var userContactInfoDict = {
+  "userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
+}
+
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -51,14 +55,17 @@ app.listen(app.get('port'), function() {
 
 
 function startListeners() {
-  firebase.database().ref("/MessageData").on('child_added', function(snapshot) {
-    var snapshotPath = '/MessageData' + '/' + snapshot.key
+  firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
+    userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+
+    var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
     console.log(snapshotPath)
 		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
     		
 			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
     		console.log(snapshot.child("text").val())
-        console.log(snapshot.parent().key())
+        console.log("senderId: " + snapshot.child("senderId").val())
+        console.log(userContactInfoDict[snapshot.child("senderId").val()])
 		})
   });
   console.log("starting listener")
@@ -136,11 +143,13 @@ app.post('/twiliowebhook/', function (req, res) {
             "senderId": req.body.From,
             "sentByUser": true,
             "type": "text",
-            "fileName": ""
+            "fileName": "",
         }
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, phoneNumberInfoDict)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+19804304321")
+       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
+
 
     }
 
