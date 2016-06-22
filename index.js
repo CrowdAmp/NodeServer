@@ -135,7 +135,6 @@ app.post('/twiliowebhook/', function (req, res) {
             "senderId": req.body.From,
             "sentByUser": false,
             "type": "text",
-            "fileName": req.body.MediaUrl,
             "messageSentTo": req.body.From,
             "messageSentFromApp": false //Should change to one of 100 phone numbers
         }
