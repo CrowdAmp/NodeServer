@@ -10,6 +10,9 @@ var bodyParser = require('body-parser')
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
+
+var app = express()
+
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
@@ -20,7 +23,6 @@ var messageCount = 0
 
 
 
-var app = express()
 
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
