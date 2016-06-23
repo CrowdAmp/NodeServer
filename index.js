@@ -80,7 +80,9 @@ function listenForMessageAll() {
 
 function listenForNewMessages() {
   firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
-    userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+    if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
+      userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+    }
 
     var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
     console.log(snapshotPath)
@@ -180,10 +182,12 @@ app.post('/twiliowebhook/', function (req, res) {
             "type": "text",
             "fileName": "",
         }
-      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
+
+      userContactInfoDict[req.body.From] = [false, "+19804304321"]
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+19804304321")
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
+      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
 
     }
