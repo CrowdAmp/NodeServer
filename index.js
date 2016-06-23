@@ -70,7 +70,7 @@ function listenForMessageAll() {
 
 
       if (!userContactInfoDict[key][0]) {
-        sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), "")
+        sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
       } 
     }
 
