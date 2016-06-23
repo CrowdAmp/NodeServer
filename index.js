@@ -63,9 +63,10 @@ function listenForMessageAll() {
             "sentByUser": false,
             "type": snapshot.child("type").val(),
             "fileName": snapshot.child("fileName").val(),
-            "hasBeenForwarded": true
+            "hasBeenForwarded": true,
+            "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
         }
-      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
+      //addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
 
 
       if (!userContactInfoDict[key][0]) {
@@ -92,9 +93,11 @@ function listenForNewMessages() {
         var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
         if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
           console.log("should forward message")
-          sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), "")
           addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
+          console.log(snapshot.child("mediaDownloadUrl").val())
+          sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
         }
+        
 
         console.log(userContactInfoDict[snapshot.child("senderId").val()])
 
@@ -194,6 +197,8 @@ app.post('/twiliowebhook/', function (req, res) {
 });
 
 function sendMessageThroughTwilio(to, from, text, media) {
+  console.log("sending messageFromTwilio: " + to + from + text + media)
+  console.log(media == "")
   if (media == "") {
     twilio.messages.create({ 
       to: to, 
@@ -207,18 +212,31 @@ function sendMessageThroughTwilio(to, from, text, media) {
       }
     })
   } else {
+    console.log("sending media")
     twilio.messages.create({ 
         to: to, 
         from: from, 
-        body: text,
-        mediaUrl: media
+        MediaUrl: media
     }, function(err, message) { 
       if (!err) {
         console.log(message.sid); 
       } else {
         console.log(err)
-      }
+      }   
     });
+  // } else {
+  //   twilio.messages.create({ 
+  //       to: to, 
+  //       from: from, 
+  //       body: text,
+  //       mediaUrl: media
+  //   }, function(err, message) { 
+  //     if (!err) {
+  //       console.log(message.sid); 
+  //     } else {
+  //       console.log(err)
+  //     }   
+  //   });
   }
 
 }
