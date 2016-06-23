@@ -66,7 +66,7 @@ function listenForMessageAll() {
             "hasBeenForwarded": true,
             "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
         }
-      //addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
+      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
 
 
       if (!userContactInfoDict[key][0]) {
