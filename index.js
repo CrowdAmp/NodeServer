@@ -52,9 +52,31 @@ app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 })
 
+function listenForMessageAll() {
+  firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
+    for(key in userContactInfoDict) {
+
+      var messageItemDict = {
+            "text": snapshot.child("text").val(),
+            "senderId": userContactInfoDict[key][1],
+            "sentByUser": false,
+            "type": snapshot.child("type").val(),
+            "fileName": snapshot.child("fileName").val(),
+            "hasBeenForwarded": true
+        }
+      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  snapshot.child("senderId").val(), undefined, messageItemDict)
 
 
-function startListeners() {
+      if (!userContactInfoDict[key][0]) {
+        sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), "")
+      } 
+    }
+
+
+  })
+}
+
+function listenForNewMessages() {
   firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
     userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
 
@@ -147,14 +169,14 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     console.log("From: " + req.body.From)
     if(phoneNumberToInfluencerIdDict[req.body.To]) {
-      phoneNumberInfoDict = {
+      var messageItemDict = {
             "text": req.body.Body,
             "senderId": req.body.From,
             "sentByUser": true,
             "type": "text",
             "fileName": "",
         }
-      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, phoneNumberInfoDict)
+      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+19804304321")
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
@@ -203,8 +225,8 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 
 
-
-startListeners();
+listenForMessageAll()
+listenForNewMessages();
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
