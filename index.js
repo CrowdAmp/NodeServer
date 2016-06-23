@@ -55,16 +55,17 @@ app.listen(app.get('port'), function() {
 function listenForMessageAll() {
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
     for(key in userContactInfoDict) {
+      console.log("listeningForMessageAll")
 
       var messageItemDict = {
             "text": snapshot.child("text").val(),
-            "senderId": userContactInfoDict[key][1],
+            "senderId": key,
             "sentByUser": false,
             "type": snapshot.child("type").val(),
             "fileName": snapshot.child("fileName").val(),
             "hasBeenForwarded": true
         }
-      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  snapshot.child("senderId").val(), undefined, messageItemDict)
+      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
 
 
       if (!userContactInfoDict[key][0]) {
