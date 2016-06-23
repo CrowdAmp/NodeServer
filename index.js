@@ -16,7 +16,7 @@ var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos"
 }
 var userContactInfoDict = {
-  "userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
+  //"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
 }
 
 
