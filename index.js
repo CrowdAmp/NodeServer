@@ -58,8 +58,9 @@ function listenForGroupedMessages() {
   firebase.database().ref("/AlexRamos/GroupedMessageData").on('child_added', function(snapshot) {
     var snapshotPath = '/AlexRamos/GroupedMessageData' + '/' + snapshot.key 
       firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-        if (snapshot.child("sentByUser").val() == false) { //Checks that text was sent by influencer
+        if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
+          console.log("NAME: " + snapshot.name())
           //Send request for id users
           for (var i = 0; i < groupedMessageTestIds.length; i++) {
             forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
