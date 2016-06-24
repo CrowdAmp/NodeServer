@@ -83,7 +83,9 @@ function listenForMessageAll() {
             "hasBeenForwarded": true,
             "mediaDownloadUrl": ""
     }
-    addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+    if (!snapshot.child("sentByUser").val()) {
+      addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+    }
 
   })
 }
