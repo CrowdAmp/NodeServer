@@ -83,7 +83,7 @@ function listenForMessageAll() {
             "hasBeenForwarded": true,
             "mediaDownloadUrl": ""
     }
-    addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/sendToAll", undefined, sendToAllResponseDict)
+    addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
 
   })
 }
