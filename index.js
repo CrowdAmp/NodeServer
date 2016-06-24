@@ -54,36 +54,36 @@ app.listen(app.get('port'), function() {
 
 function listenForMessageAll() {
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
-    for(key in userContactInfoDict) {
-      console.log("listeningForMessageAll")
-
-      var messageItemDict = {
-            "text": snapshot.child("text").val(),
-            "senderId": key,
-            "sentByUser": false,
-            "type": snapshot.child("type").val(),
-            "fileName": snapshot.child("fileName").val(),
-            "hasBeenForwarded": true,
-            "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
-        }
-      addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
-
-
-      if (!userContactInfoDict[key][0]) {
-        sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
-      } 
-    }
-
-    var sendToAllResponseDict = {
-            "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans. Would you like to send any other messages?",
-            "senderId": "sendToAll",
-            "sentByUser": true,
-            "type": "text",
-            "fileName": "",
-            "hasBeenForwarded": true,
-            "mediaDownloadUrl": ""
-    }
     if (!snapshot.child("sentByUser").val()) {
+      for(key in userContactInfoDict) {
+        console.log("listeningForMessageAll")
+
+        var messageItemDict = {
+              "text": snapshot.child("text").val(),
+              "senderId": key,
+              "sentByUser": false,
+              "type": snapshot.child("type").val(),
+              "fileName": snapshot.child("fileName").val(),
+              "hasBeenForwarded": true,
+              "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
+          }
+        addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
+
+
+        if (!userContactInfoDict[key][0]) {
+          sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
+        } 
+      }
+
+      var sendToAllResponseDict = {
+              "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans. Would you like to send any other messages?",
+              "senderId": "sendToAll",
+              "sentByUser": true,
+              "type": "text",
+              "fileName": "",
+              "hasBeenForwarded": true,
+              "mediaDownloadUrl": ""
+      }
       addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
     }
 
