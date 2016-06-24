@@ -12,6 +12,8 @@ var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var app = express()
 
+var groupedMessageTestIds = ["+13108670121", "+15034966700"]
+
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos"
 }
@@ -52,29 +54,47 @@ app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 })
 
+function listenForGroupedMessages() {
+  firebase.database().ref("/AlexRamos/GroupedMessageData").on('child_added', function(snapshot) {
+    var snapshotPath = '/AlexRamos/GroupedMessageData' + '/' + snapshot.key 
+      firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+        if (snapshot.child("sentByUser").val() == false) { //Checks that text was sent by influencer
+          console.log(snapshot.child("senderId").val())
+          //Send request for id users
+          for (var i = 0; i < groupedMessageTestIds.length; i++) {
+            forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
+          }
+
+        }
+      })
+  })
+}
+
+function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
+  console.log("listeningForMessageAll")
+
+  var messageItemDict = {
+        "text": snapshot.child("text").val(),
+        "senderId": userId,
+        "sentByUser": false,
+        "type": snapshot.child("type").val(),
+        "fileName": snapshot.child("fileName").val(),
+        "hasBeenForwarded": true,
+        "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
+    }
+  addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
+
+  if (!userContactInfoDict[userId][0]) {
+    sendMessageThroughTwilio(userId, userContactInfoDict[key][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
+  }  
+}
+
 function listenForMessageAll() {
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
     if (!snapshot.child("sentByUser").val()) {
       for(key in userContactInfoDict) {
-        console.log("listeningForMessageAll")
-
-        var messageItemDict = {
-              "text": snapshot.child("text").val(),
-              "senderId": key,
-              "sentByUser": false,
-              "type": snapshot.child("type").val(),
-              "fileName": snapshot.child("fileName").val(),
-              "hasBeenForwarded": true,
-              "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
-          }
-        addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/" +  key, undefined, messageItemDict)
-
-
-        if (!userContactInfoDict[key][0]) {
-          sendMessageThroughTwilio(key, userContactInfoDict[key][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
-        } 
+        forwardFirebaseSnapshotToUsers(snapshot,"AlexRamos/IndividualMessageData/", key)
       }
-
       var sendToAllResponseDict = {
               "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
               "senderId": "sendToAll",
