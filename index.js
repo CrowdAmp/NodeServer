@@ -60,7 +60,6 @@ function listenForGroupedMessages() {
       firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
         if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
-          console.log("NAME: " + snapshot.name())
           //Send request for id users
           for (var i = 0; i < groupedMessageTestIds.length; i++) {
             forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
