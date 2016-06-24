@@ -284,6 +284,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 listenForMessageAll()
 listenForNewMessages();
+listenForGroupedMessages()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
