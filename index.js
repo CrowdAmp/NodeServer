@@ -74,8 +74,8 @@ function listenForMessageAll() {
       } 
     }
 
-    var messageItemDict = {
-            "text": "Message sent succesfully to " + len(userContactInfoDict) " fans. Would you like to send any other messages?",
+    var sendToAllResponseDict = {
+            "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans. Would you like to send any other messages?",
             "senderId": "sendToAll",
             "sentByUser": true,
             "type": "text",
