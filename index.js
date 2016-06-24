@@ -12,7 +12,7 @@ var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var app = express()
 
-var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
+var groupedMessageTestIds = ["+13108670121", "+15034966700"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos"
