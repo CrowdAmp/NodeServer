@@ -76,7 +76,7 @@ function listenForMessageAll() {
       }
 
       var sendToAllResponseDict = {
-              "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans. Would you like to send any other messages?",
+              "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
               "senderId": "sendToAll",
               "sentByUser": true,
               "type": "text",
@@ -84,7 +84,9 @@ function listenForMessageAll() {
               "hasBeenForwarded": true,
               "mediaDownloadUrl": ""
       }
-      addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+      if (Object.keys(userContactInfoDict).length > 0) {
+        addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+      } 
     }
 
   })
