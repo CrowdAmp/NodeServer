@@ -74,6 +74,16 @@ function listenForMessageAll() {
       } 
     }
 
+    var messageItemDict = {
+            "text": "Message sent succesfully to " + len(userContactInfoDict) " fans. Would you like to send any other messages?",
+            "senderId": "sendToAll",
+            "sentByUser": true,
+            "type": "text",
+            "fileName": "",
+            "hasBeenForwarded": true,
+            "mediaDownloadUrl": ""
+    }
+    addItemToFirebaseDatabase("AlexRamos/IndividualMessageData/sendToAll", undefined, sendToAllResponseDict)
 
   })
 }
