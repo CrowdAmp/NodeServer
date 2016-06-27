@@ -53,20 +53,47 @@ firebase.initializeApp({
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 })
+var conversationId = "33PeopleSent"
+var messageText = "When is your next vine coming out?"
+
+function sendGroupedConversationToInfluencer() {
+  
+  var conversationItemDict = {
+    "conversationTitle" : "33 People",
+  }
+
+  var messageItemDict = {
+        "text": messageText,
+        "senderId": conversationId,
+        "sentByUser": true,
+        "type": "text",
+        "fileName": "",
+        "mediaDownloadUrl": ""
+    }
+
+  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/", conversationId, conversationItemDict)
+  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
+  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, undefined ,messageItemDict)
+
+}
+
+
 
 function listenForGroupedMessages() {
   firebase.database().ref("/AlexRamos/GroupedMessageData").on('child_added', function(snapshot) {
     var snapshotPath = '/AlexRamos/GroupedMessageData' + '/' + snapshot.key 
-      firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+    firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+      if (!snapshot.child("hasBeenForwarded").val() && snapshot.child("sentByUser").val()) {
+        addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
         if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
           //Send request for id users
           for (var i = 0; i < groupedMessageTestIds.length; i++) {
             forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
           }
-
         }
-      })
+      }
+    })
   })
 }
 
@@ -91,24 +118,28 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
 
 function listenForMessageAll() {
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
-    console.log("MESSAGE ALL " + snapshot.child("text").val())
-    console.log(userContactInfoDict)
-    if (!snapshot.child("sentByUser").val()) {
-      for(key in userContactInfoDict) {
-        forwardFirebaseSnapshotToUsers(snapshot,"AlexRamos/IndividualMessageData/", key)
+
+
+    if (!snapshot.child("hasBeenForwarded").val()) {
+        addItemToFirebaseDatabase("/AlexRamos/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
+
+      if (!snapshot.child("sentByUser").val()) {
+        for(key in userContactInfoDict) {
+          forwardFirebaseSnapshotToUsers(snapshot,"AlexRamos/IndividualMessageData/", key)
+        }
+        var sendToAllResponseDict = {
+                "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
+                "senderId": "sendToAll",
+                "sentByUser": true,
+                "type": "text",
+                "fileName": "",
+                "hasBeenForwarded": true,
+                "mediaDownloadUrl": ""
+        }
+        if (Object.keys(userContactInfoDict).length > 0) {
+          addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+        } 
       }
-      var sendToAllResponseDict = {
-              "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
-              "senderId": "sendToAll",
-              "sentByUser": true,
-              "type": "text",
-              "fileName": "",
-              "hasBeenForwarded": true,
-              "mediaDownloadUrl": ""
-      }
-      if (Object.keys(userContactInfoDict).length > 0) {
-        addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
-      } 
     }
 
   })
@@ -287,6 +318,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
+sendGroupedConversationToInfluencer()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
