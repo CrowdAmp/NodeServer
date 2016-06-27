@@ -98,7 +98,7 @@ function listenForGroupedMessages() {
 }
 
 function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
-  console.log("listeningForMessageAll")
+  console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
 
   var messageItemDict = {
         "text": snapshot.child("text").val(),
