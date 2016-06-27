@@ -83,7 +83,7 @@ function listenForGroupedMessages() {
   firebase.database().ref("/AlexRamos/GroupedMessageData").on('child_added', function(snapshot) {
     var snapshotPath = '/AlexRamos/GroupedMessageData' + '/' + snapshot.key 
     firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-      if (!snapshot.child("hasBeenForwarded").val() && snapshot.child("sentByUser").val()) {
+      if (!snapshot.child("hasBeenForwarded").val() && !snapshot.child("sentByUser").val() && snapshot.child("type").val()) {
         addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
         if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
