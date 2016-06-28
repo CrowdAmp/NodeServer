@@ -72,6 +72,7 @@ function sendGroupedConversationToInfluencer() {
     }
 
   addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/", conversationId, conversationItemDict)
+  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, "influencerDidRead", false)
   addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
   addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, undefined ,messageItemDict)
 
@@ -110,6 +111,7 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
         "mediaDownloadUrl": snapshot.child("mediaDownloadUrl").val()
     }
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
+  addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
 
   if (!userContactInfoDict[userId][0]) {
     sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
@@ -251,6 +253,7 @@ app.post('/twiliowebhook/', function (req, res) {
         }
 
       userContactInfoDict[req.body.From] = [false, "+19804304321"]
+      addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+19804304321")
       addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
