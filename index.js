@@ -163,6 +163,7 @@ function listenForNewMessages() {
 
         var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
         if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
+          console.log("FORWARDING MESSAGE IN LISTENFORNEWMESSAGES")
           console.log("should forward message")
           addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           console.log(snapshot.child("mediaDownloadUrl").val())
