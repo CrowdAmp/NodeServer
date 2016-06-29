@@ -342,10 +342,10 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 
 
-listenForMessageAll()
-listenForNewMessages();
-listenForGroupedMessages()
-sendGroupedConversationToInfluencer()
+//listenForMessageAll()
+//listenForNewMessages();
+//listenForGroupedMessages()
+//sendGroupedConversationToInfluencer()
 sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
