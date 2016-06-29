@@ -50,16 +50,27 @@ app.post('/test', function(request, response) {
 
 app.get('/sendRequest', function(request, response) {
   console.log("shouldSendRequest")
-  reqUrl = "https://peaceful-mountain-72739.herokuapp.com"
+  reqUrl = "https://fierce-forest-11519.herokuapp.com/test"
 
-  requests.post(
-    reqUrl,
-    { content: 'success!!!' },
-    function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body)
+try {
+
+  requests({
+    url: reqUrl,
+    method: "POST",
+    json: { content: 'success!!! the secret code is yawilukaki' },
+  },function (error, response, body) {
+        if (!error) {
+            console.log("body: " + response.body.test)
+        } else {
+          console.log("error: " + error)
         }
     });
+
+} catch(err) {
+  console.log("Error with request: " + err)
+}
+
+
   response.send(200)
 })
 
