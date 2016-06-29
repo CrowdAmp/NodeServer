@@ -43,12 +43,12 @@ app.get('/', function(request, response) {
 });
 
 app.post('/test', function(request, response) {
-    console.log(req.body)
-    console.log(req.body.content)
+    console.log(request.body)
+    console.log(request.body.content)
     response.sendStatus(200)
 })
 
-function sendTestRequest() {
+app.get('/sendRequest', function(request, response) {
 
   reqUrl = "https://peaceful-mountain-72739.herokuapp.com"
 
@@ -60,7 +60,7 @@ function sendTestRequest() {
             console.log(body)
         }
     });
-}
+})
 
 
 firebase.initializeApp({
@@ -346,7 +346,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
 //listenForNewMessages();
 //listenForGroupedMessages()
 //sendGroupedConversationToInfluencer()
-sendTestRequest()
+//sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
