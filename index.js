@@ -49,8 +49,8 @@ app.post('/test', function(request, response) {
 })
 
 app.get('/sendRequest', function(request, response) {
-  console.log("shouldSendRequest")
-  reqUrl = "https://fierce-forest-11519.herokuapp.com/test"
+console.log("shouldSendRequest")
+reqUrl = "https://fierce-forest-11519.herokuapp.com/test"
 
 try {
 
@@ -69,10 +69,50 @@ try {
 } catch(err) {
   console.log("Error with request: " + err)
 }
-
-
   response.send(200)
 })
+
+function forwardSnapshotToNLPDatabase(snapshot, influencerId) {
+  console.log("shouldForwardSnapshotToNLPDatabase " + snapshot)
+  reqUrl = "https://fierce-forest-11519.herokuapp.com/didReceiveMessage"
+
+  var snapshotContent = ""
+  if (snapshot.child("type").val() == "text") {
+    snapshotContent = snapshot.child("text").val()
+  } else if (snapshot.child("type").val() == "image") {
+    snapshotContent =  snapshot.child("fileName").val()
+  } else {
+    return
+  }
+
+
+  try {
+    requests({
+      url: reqUrl,
+      method: "POST",
+      json: { 
+         content: snapshotContent,
+         type: snapshot.child("type").val(),
+         userId: snapshot.child("senderId").val(),
+         influencerId: influencerId,
+         sentByUser: snapshot.child("sentByUser").val()
+       },
+
+
+    },function (error, response, body) {
+          if (!error) {
+              console.log("response: " + response)
+          } else {
+            console.log("error: " + error)
+          }
+      });
+
+  } catch(err) {
+    console.log("Error with request: " + err)
+  }
+
+}
+
 
 
 firebase.initializeApp({
@@ -89,6 +129,8 @@ app.listen(app.get('port'), function() {
 })
 var conversationId = "33PeopleSent"
 var messageText = "When is your next vine coming out?"
+
+
 
 function sendGroupedConversationToInfluencer() {
   
@@ -134,6 +176,7 @@ function listenForGroupedMessages() {
 
 function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
+  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos")
 
   var messageItemDict = {
         "text": snapshot.child("text").val(),
@@ -154,8 +197,6 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
 
 function listenForMessageAll() {
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
-
-
     if (!snapshot.child("hasBeenForwarded").val()) {
         addItemToFirebaseDatabase("/AlexRamos/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
 
@@ -199,11 +240,14 @@ function listenForNewMessages() {
         if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
           console.log("FORWARDING MESSAGE IN LISTENFORNEWMESSAGES")
           console.log("should forward message")
-          addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           console.log(snapshot.child("mediaDownloadUrl").val())
           sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
         }
-        
+
+        if (snapshot.child("hasBeenForwarded").val() == false) {
+          forwardSnapshotToNLPDatabase(snapshot, "AlexRamos")
+        }
+        addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
 
         console.log(userContactInfoDict[snapshot.child("senderId").val()])
 
@@ -350,9 +394,6 @@ function sendMessageThroughTwilio(to, from, text, media) {
   }
 
 }
-
-
-
 
 //listenForMessageAll()
 //listenForNewMessages();
