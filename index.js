@@ -39,7 +39,7 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
-    response.sendFile((path.join(__dirname + '/static/index.html')));
+    response.send("hello world");
 });
 
 app.post('/test', function(request, response) {
@@ -49,10 +49,10 @@ app.post('/test', function(request, response) {
 })
 
 app.get('/sendRequest', function(request, response) {
-
+  console.log("shouldSendRequest")
   reqUrl = "https://peaceful-mountain-72739.herokuapp.com"
 
-  requests(
+  requests.post(
     reqUrl,
     { content: 'success!!!' },
     function (error, response, body) {
@@ -60,6 +60,7 @@ app.get('/sendRequest', function(request, response) {
             console.log(body)
         }
     });
+  response.send(200)
 })
 
 
