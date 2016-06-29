@@ -10,7 +10,7 @@ var bodyParser = require('body-parser')
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
-var request = require('request');
+var requests = require('request');
 
 var app = express()
 
@@ -52,7 +52,7 @@ app.get('/sendRequest', function(request, response) {
 
   reqUrl = "https://peaceful-mountain-72739.herokuapp.com"
 
-  request.post(
+  requests(
     reqUrl,
     { content: 'success!!!' },
     function (error, response, body) {
