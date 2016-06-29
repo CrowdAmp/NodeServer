@@ -10,6 +10,8 @@ var bodyParser = require('body-parser')
 var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
+var request = require('request');
+
 var app = express()
 
 var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -39,6 +41,26 @@ app.use(express.static(__dirname + '/public'))
 app.get('/', function(request, response) {
     response.sendFile((path.join(__dirname + '/static/index.html')));
 });
+
+app.post('/test', function(request, response) {
+    console.log(req.body)
+    console.log(req.body.content)
+    response.sendStatus(200)
+})
+
+function sendTestRequest() {
+
+  reqUrl = "https://peaceful-mountain-72739.herokuapp.com"
+
+  request.post(
+    reqUrl,
+    { content: 'success!!!' },
+    function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body)
+        }
+    });
+}
 
 
 firebase.initializeApp({
@@ -324,6 +346,7 @@ listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
 sendGroupedConversationToInfluencer()
+sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 sendPushNotification(["8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
