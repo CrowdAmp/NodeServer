@@ -274,7 +274,7 @@ function sendGroupedConversationToInfluencer(influencerId, content, numberOfUser
 
 function listenForGroupedMessages() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
-    var influencerName = snapshot.key()
+    var influencerName = snapshot.key
     firebase.database().ref("/" + influencerName + "/GroupedMessageData").on('child_added', function(snapshot) {
       var snapshotPath = '/' + influencerName + '/GroupedMessageData' + '/' + snapshot.key 
       firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
@@ -313,6 +313,7 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
 }
 
 function listenForMessageAll() {
+  firebase.database()
   firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
     if (!snapshot.child("hasBeenForwarded").val()) {
         addItemToFirebaseDatabase("/AlexRamos/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
