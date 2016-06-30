@@ -56,6 +56,7 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var influencerId = request.body.influencerId
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
+  response.send(200)
 
 })
 
