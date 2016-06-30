@@ -14,7 +14,7 @@ var requests = require('request');
 
 var app = express()
 
-var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
+//var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos"
@@ -116,7 +116,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
 
     },function (error, response, body) {
           if (!error) {
-              console.log("response: " + response.body.content)
+            console.log("response: " + response.body.content)
           } else {
             console.log("error: " + error)
           }
@@ -128,6 +128,43 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
 
 }
 
+function postInfluencerDidRespondToPrompt(influencerId, snapshot) {
+  console.log("PostingInfluencerDidRespondToPrompt request")
+  var reqUrl = serverUrl + "influencerDidRespondToPrompt"
+  
+  var snapshotContent = ""
+  if (snapshot.child("type").val() == "text") {
+    snapshotContent = snapshot.child("text").val()
+  } else if (snapshot.child("type").val() == "image") {
+    snapshotContent =  snapshot.child("fileName").val()
+  } else {
+    return
+  }
+
+  try {
+    requests({
+      url: reqUrl,
+      method: "POST",
+      json: { 
+         content: snapshotContent,
+         type: snapshot.child("type").val(),
+         phraseId: snapshot.child("senderId").val(),
+         influencerId: influencerId
+       },
+
+
+    },function (error, response, body) {
+          if (!error) {
+            console.log("response: " + response.body.content)
+          } else {
+            console.log("error: " + error)
+          }
+      });
+
+  } catch(err) {
+    console.log("Error with postInfluencerDidRespondToPrompt request: " + err)
+  }
+}
 
 
 firebase.initializeApp({
@@ -181,10 +218,12 @@ function listenForGroupedMessages() {
         addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
         if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
+            postInfluencerDidRespondToPrompt("AlexRamos", snapshot)
           //Send request for id users
-          for (var i = 0; i < groupedMessageTestIds.length; i++) {
-            forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
-          }
+          //for (var i = 0; i < groupedMessageTestIds.length; i++) {
+            
+            //forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
+          //}
         }
       }
     })
