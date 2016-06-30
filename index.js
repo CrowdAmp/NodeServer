@@ -56,9 +56,67 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var influencerId = request.body.influencerId
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
-  response.send(200)
+  response.sendStatus(200)
 
 })
+
+app.post('/shouldSendMessageToUsers', function(request, response) {
+  console.log("shouleSendMessageToUsers")
+  var content = request.body.content
+  var type = request.body.type
+  var influencerId = request.body.influencerId
+  var userIdList = request.body.userIdList
+
+  for (var i = 0; i < userIdList; i++) {    
+    forwardMessageFromServerToUsers(content, type, influencerId + "/IndividualMessageData/", userIdList[i])
+  }
+  response.sendStatus(200)
+
+})
+
+function forwardMessageFromServerToUsers(content, type, firebasePath, userId) {
+  console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
+  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos", userId)
+
+  var messageItemDict = {}
+  if (type == "text") {
+    messageItemDict = {
+      "text": content,
+      "senderId": userId,
+      "sentByUser": false,
+      "type": "text",
+      "fileName": "",
+      "hasBeenForwarded": true,
+      "mediaDownloadUrl": ""
+    }
+  } else if (type == 'image') {
+    messageItemDict = {
+      "text": "",
+      "senderId": userId,
+      "sentByUser": false,
+      "type": "image",
+      "fileName": content,
+      "hasBeenForwarded": true,
+      "mediaDownloadUrl": ""
+    }
+  } else {
+    return
+  }
+
+
+  addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
+  addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
+
+  if (!userContactInfoDict[userId][0]) {
+    if (type == "text") {
+      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], content, "")
+    } else if (type == "image") {
+      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], "", "url")
+    }
+  }
+}
+
+
 
 app.get('/sendRequest', function(request, response) {
 console.log("shouldSendRequest")
@@ -219,11 +277,7 @@ function listenForGroupedMessages() {
         if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
           console.log(snapshot.child("senderId").val())
             postInfluencerDidRespondToPrompt("AlexRamos", snapshot)
-          //Send request for id users
-          //for (var i = 0; i < groupedMessageTestIds.length; i++) {
-            
-            //forwardFirebaseSnapshotToUsers(snapshot, "AlexRamos/IndividualMessageData/" ,groupedMessageTestIds[i])
-          //}
+          
         }
       }
     })
