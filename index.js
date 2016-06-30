@@ -316,7 +316,7 @@ function listenForMessageAll() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
     firebase.database().ref('/' + influencerId + "/MessageAllData/sendToAll").on('child_added', function(snapshot) {
-      if (!snapshot.child("hasBeenForwarded").val()) {
+      if (!snapshot.child("hasBeenForwarded").val() && snapshot.key[0] == '-') {
           addItemToFirebaseDatabase('/' + influencerId + "/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
           console.log("ListeningForMessageAll " + snapshot.key)
         if (!snapshot.child("sentByUser").val()) {
