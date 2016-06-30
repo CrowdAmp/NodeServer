@@ -77,8 +77,6 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
 
 function forwardMessageFromServerToUsers(content, type, firebasePath, userId) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
-  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos", userId)
-
   var messageItemDict = {}
   if (type == "text") {
     messageItemDict = {
