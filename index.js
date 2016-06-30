@@ -14,6 +14,10 @@ var requests = require('request');
 
 var app = express()
 
+var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
+
+
+
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
@@ -56,6 +60,7 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var influencerId = request.body.influencerId
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
+  sendPushNotification([pushNotificationDict[influencerId]], "Message from " + numberOfUsers + " fans: " + content)
   response.sendStatus(200)
 
 })
