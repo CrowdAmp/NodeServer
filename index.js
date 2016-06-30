@@ -291,9 +291,9 @@ function listenForGroupedMessages() {
   })
 }
 
-function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
+function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influencerId) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
-  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos", userId)
+  forwardSnapshotToNLPDatabase(snapshot, influencerId, userId)
 
   var messageItemDict = {
         "text": snapshot.child("text").val(),
@@ -313,30 +313,32 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
 }
 
 function listenForMessageAll() {
-  firebase.database()
-  firebase.database().ref("/AlexRamos/MessageAllData/sendToAll").on('child_added', function(snapshot) {
-    if (!snapshot.child("hasBeenForwarded").val()) {
-        addItemToFirebaseDatabase("/AlexRamos/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
+  firebase.database().ref('/').on('child_added', function(snapshot) {
+    var influencerId = snapshot.key
+    firebase.database().ref('/' + influencerId + "MessageAllData/sendToAll").on('child_added', function(snapshot) {
+      if (!snapshot.child("hasBeenForwarded").val()) {
+          addItemToFirebaseDatabase('/' + influencerId + "/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
 
-      if (!snapshot.child("sentByUser").val()) {
-        for(key in userContactInfoDict) {
-          forwardFirebaseSnapshotToUsers(snapshot,"AlexRamos/IndividualMessageData/", key)
+        if (!snapshot.child("sentByUser").val()) {
+          for(key in userContactInfoDict) {
+            forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+          }
+          var sendToAllResponseDict = {
+                  "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
+                  "senderId": "sendToAll",
+                  "sentByUser": true,
+                  "type": "text",
+                  "fileName": "",
+                  "hasBeenForwarded": false,
+                  "mediaDownloadUrl": ""
+          }
+          if (Object.keys(userContactInfoDict).length > 0) {
+            addItemToFirebaseDatabase(influencerId + "/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
+          } 
         }
-        var sendToAllResponseDict = {
-                "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
-                "senderId": "sendToAll",
-                "sentByUser": true,
-                "type": "text",
-                "fileName": "",
-                "hasBeenForwarded": false,
-                "mediaDownloadUrl": ""
-        }
-        if (Object.keys(userContactInfoDict).length > 0) {
-          addItemToFirebaseDatabase("AlexRamos/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
-        } 
       }
-    }
 
+    })
   })
 }
 
