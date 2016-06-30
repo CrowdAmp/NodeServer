@@ -23,6 +23,7 @@ var userContactInfoDict = {
   //"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
 }
 
+var serverUrl = "https://f0b49126.ngrok.io/"
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -48,9 +49,19 @@ app.post('/test', function(request, response) {
     response.sendStatus(200)
 })
 
+app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
+  console.log(request.body)
+  var content = request.body.content
+  var numberOfUsers = request.body.numberOfUsers
+  var influencerId = request.body.influencerId
+  var phraseId = request.body.phraseId 
+  sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
+
+})
+
 app.get('/sendRequest', function(request, response) {
 console.log("shouldSendRequest")
-reqUrl = "https://fierce-forest-11519.herokuapp.com/test"
+reqUrl = serverUrl + "test"
 
 try {
 
@@ -72,9 +83,9 @@ try {
   response.send(200)
 })
 
-function forwardSnapshotToNLPDatabase(snapshot, influencerId) {
+function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
   console.log("shouldForwardSnapshotToNLPDatabase " + snapshot)
-  reqUrl = "https://fierce-forest-11519.herokuapp.com/didReceiveMessage"
+  reqUrl = serverUrl +  "didReceiveMessage"
 
   var snapshotContent = ""
   if (snapshot.child("type").val() == "text") {
@@ -85,6 +96,9 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId) {
     return
   }
 
+  if (!userId) {
+    userId = snapshot.child("senderId").val()
+  }
 
   try {
     requests({
@@ -93,7 +107,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId) {
       json: { 
          content: snapshotContent,
          type: snapshot.child("type").val(),
-         userId: snapshot.child("senderId").val(),
+         userId: userId,
          influencerId: influencerId,
          sentByUser: snapshot.child("sentByUser").val()
        },
@@ -101,7 +115,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId) {
 
     },function (error, response, body) {
           if (!error) {
-              console.log("response: " + response)
+              console.log("response: " + response.body.content)
           } else {
             console.log("error: " + error)
           }
@@ -127,30 +141,32 @@ firebase.initializeApp({
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'))
 })
+
+
 var conversationId = "33PeopleSent"
 var messageText = "When is your next vine coming out?"
 
 
 
-function sendGroupedConversationToInfluencer() {
+function sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId) {
   
   var conversationItemDict = {
-    "conversationTitle" : "33 People",
+    "conversationTitle" : "Message from " + numberOfUsers + " fans",
   }
 
   var messageItemDict = {
-        "text": messageText,
-        "senderId": conversationId,
+        "text": content,
+        "senderId": phraseId,
         "sentByUser": true,
         "type": "text",
         "fileName": "",
         "mediaDownloadUrl": ""
     }
 
-  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/", conversationId, conversationItemDict)
-  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, "influencerDidRead", false)
-  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
-  addItemToFirebaseDatabase("/AlexRamos/GroupedMessageData/" +  conversationId, undefined ,messageItemDict)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/", phraseId, conversationItemDict)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "influencerDidRead", false)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, undefined ,messageItemDict)
 
 }
 
@@ -176,7 +192,7 @@ function listenForGroupedMessages() {
 
 function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
-  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos")
+  forwardSnapshotToNLPDatabase(snapshot, "AlexRamos", userId)
 
   var messageItemDict = {
         "text": snapshot.child("text").val(),
@@ -210,7 +226,7 @@ function listenForMessageAll() {
                 "sentByUser": true,
                 "type": "text",
                 "fileName": "",
-                "hasBeenForwarded": true,
+                "hasBeenForwarded": false,
                 "mediaDownloadUrl": ""
         }
         if (Object.keys(userContactInfoDict).length > 0) {
@@ -244,13 +260,12 @@ function listenForNewMessages() {
           sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
         }
 
-        if (snapshot.child("hasBeenForwarded").val() == false) {
+        if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
           forwardSnapshotToNLPDatabase(snapshot, "AlexRamos")
         }
-        addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
-
-        console.log(userContactInfoDict[snapshot.child("senderId").val()])
-
+        if (userContactInfo) {
+          addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
+        }
 		})
   });
   console.log("starting listener")
@@ -395,10 +410,10 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 }
 
-//listenForMessageAll()
-//listenForNewMessages();
-//listenForGroupedMessages()
-//sendGroupedConversationToInfluencer()
+listenForMessageAll()
+listenForNewMessages();
+listenForGroupedMessages()
+
 //sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
