@@ -67,7 +67,8 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
   var influencerId = request.body.influencerId
   var userIdList = request.body.userIdList
 
-  for (var i = 0; i < userIdList; i++) {    
+  for (var i = 0; i < userIdList; i++) {  
+    console.log("sendingMesage to userId: " + userIdList[i])  
     forwardMessageFromServerToUsers(content, type, influencerId + "/IndividualMessageData/", userIdList[i])
   }
   response.sendStatus(200)
