@@ -370,7 +370,7 @@ function listenForNewMessages() {
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
           }
-          if (userContactInfo) {
+          if (userContactInfo && !snapshot.child('hasBeenForwarded')) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           }
   		})
@@ -476,7 +476,7 @@ app.post('/twiliowebhook/', function (req, res) {
 function sendMessageThroughTwilio(to, from, text, media) {
   console.log("sending messageFromTwilio: " + to + from + text + media)
   console.log(media == "")
-  if (media == "") {
+  if (media == "" || text == null) {
     twilio.messages.create({ 
       to: to, 
       from: from, 
@@ -488,7 +488,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
         console.log(err)
       }
     })
-  } else {
+  } else if (media != null){
     console.log("sending media")
     twilio.messages.create({ 
         to: to, 
