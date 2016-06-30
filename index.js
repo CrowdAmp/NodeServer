@@ -345,13 +345,13 @@ function listenForMessageAll() {
 function listenForNewMessages() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
-    var snapshotPath = "/" + snapshot.key + '/IndividualMessageData'
-    firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+    //var snapshotPath = "/" + snapshot.key + 'AlexRamos/IndividualMessageData'
+    firebase.database().ref(influencerId + '/IndividualMessageData').on('child_added', function(snapshot) {
       if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
         userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
       }
 
-      snapshotPath = snapshotPath + '/' + snapshot.key
+      var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
   		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
   			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
@@ -370,7 +370,7 @@ function listenForNewMessages() {
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
           }
-          if (userContactInfo && !snapshot.child('hasBeenForwarded')) {
+          if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           }
   		})
