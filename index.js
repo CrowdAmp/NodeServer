@@ -27,7 +27,7 @@ var userContactInfoDict = {
   //"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
 }
 
-var serverUrl = "https://fierce-forest-11519.herokuapp.com/test"
+var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
