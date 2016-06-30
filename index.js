@@ -273,17 +273,20 @@ function sendGroupedConversationToInfluencer(influencerId, content, numberOfUser
 
 
 function listenForGroupedMessages() {
-  firebase.database().ref("/AlexRamos/GroupedMessageData").on('child_added', function(snapshot) {
-    var snapshotPath = '/AlexRamos/GroupedMessageData' + '/' + snapshot.key 
-    firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-      if (!snapshot.child("hasBeenForwarded").val() && !snapshot.child("sentByUser").val() && snapshot.child("type").val()) {
-        addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
-        if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
-          console.log(snapshot.child("senderId").val())
-            postInfluencerDidRespondToPrompt("AlexRamos", snapshot)
-          
+  firebase.database().ref('/').on('child_added', function(snapshot) {
+    var influencerName = snapshot.key()
+    firebase.database().ref("/" + influencerName + "/GroupedMessageData").on('child_added', function(snapshot) {
+      var snapshotPath = '/' + influencerName + '/GroupedMessageData' + '/' + snapshot.key 
+      firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+        if (!snapshot.child("hasBeenForwarded").val() && !snapshot.child("sentByUser").val() && snapshot.child("type").val()) {
+          addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
+          if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
+            console.log(snapshot.child("senderId").val())
+              postInfluencerDidRespondToPrompt(infuencerName, snapshot)
+            
+          }
         }
-      }
+      })
     })
   })
 }
@@ -337,35 +340,39 @@ function listenForMessageAll() {
 }
 
 function listenForNewMessages() {
-  firebase.database().ref("/AlexRamos/IndividualMessageData").on('child_added', function(snapshot) {
-    if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
-      userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
-    }
+  firebase.database().ref('/').on('child_added', function(snapshot) {
+    var influencerId = snapshot.key
+    var snapshotPath = "/" + snapshot.key + '/IndividualMessageData'
+    firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+      if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
+        userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+      }
 
-    var snapshotPath = '/AlexRamos/IndividualMessageData' + '/' + snapshot.key
-    console.log(snapshotPath)
-		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
-    		console.log(snapshot.child("text").val())
-        console.log("senderId: " + snapshot.child("senderId").val())
-        console.log(userContactInfoDict)
+      snapshotPath = snapshotPath + '/' + snapshot.key
+      console.log(snapshotPath)
+  		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
+  			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
+      		console.log(snapshot.child("text").val())
+          console.log("senderId: " + snapshot.child("senderId").val())
+          console.log(userContactInfoDict)
 
-        var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
-        if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
-          console.log("FORWARDING MESSAGE IN LISTENFORNEWMESSAGES")
-          console.log("should forward message")
-          console.log(snapshot.child("mediaDownloadUrl").val())
-          sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
-        }
+          var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
+          if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
+            console.log("FORWARDING MESSAGE IN LISTENFORNEWMESSAGES")
+            console.log("should forward message")
+            console.log(snapshot.child("mediaDownloadUrl").val())
+            sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
+          }
 
-        if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
-          forwardSnapshotToNLPDatabase(snapshot, "AlexRamos")
-        }
-        if (userContactInfo) {
-          addItemToFirebaseDatabase('/AlexRamos/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
-        }
-		})
-  });
+          if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
+            forwardSnapshotToNLPDatabase(snapshot, influencerId)
+          }
+          if (userContactInfo) {
+            addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
+          }
+  		})
+    });
+  })
   console.log("starting listener")
 }
 
