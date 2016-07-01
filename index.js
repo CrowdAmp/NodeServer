@@ -16,7 +16,9 @@ var app = express()
 
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
-
+var influencerMetricsDict = {
+  "AlexRamos" : [0,0] //total fans, total messages
+}
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
@@ -46,6 +48,14 @@ app.use(express.static(__dirname + '/public'))
 app.get('/', function(request, response) {
     response.send("hello world");
 });
+
+app.post('/getTotalFans', function(request, response) {
+  response.send(influencerMetricsDict['AlexRamos'][0])
+})
+
+app.post('/getTotalMessages', function(request, response) {
+    response.send(influencerMetricsDict['AlexRamos'][1])
+})
 
 app.post('/test', function(request, response) {
     console.log(request.body)
