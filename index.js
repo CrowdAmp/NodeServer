@@ -53,8 +53,8 @@ app.get('/getTotalFans', function(request, response) {
   response.send(influencerMetricsDict['AlexRamos'][0].toString())
 })
 
-app.get('/getTotalMessages', function(request, response) {
-    response.send(influencerMetricsDict['AlexRamos'][1].toString())
+app.get('/getTotalMessages/:id', function(request, response) {
+    response.send(influencerMetricsDict[request.params.id][1].toString())
 })
 
 app.post('/test', function(request, response) {
