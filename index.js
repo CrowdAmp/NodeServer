@@ -17,11 +17,13 @@ var app = express()
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
 var influencerMetricsDict = {
-  "AlexRamos" : [0,0] //total fans, total messages
+  "AlexRamos" : [0,0],
+  'rmayer9999' : [0,0] //total fans, total messages
 }
 
 var influencerIdToNameDict = {
-  'AlexRamos' : "Alex Ramos"
+  'AlexRamos' : "Alex Ramos",
+  'rmayer9999' : "Ruben Mayer"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
