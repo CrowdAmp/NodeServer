@@ -482,7 +482,7 @@ app.post('/twiliowebhook/', function (req, res) {
 
       firebase.database().ref(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From + "/sendMessagesFrom").once('value', function(snapshot) {
         console.log("QUERYING FOR sendMessagesFrom DATA" + snapshot.key)
-        console.log(snapshot.child().val())
+        console.log(snapshot.child("/").val())
         
         userContactInfoDict[req.body.From] = [false, "+12512654321"]
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
