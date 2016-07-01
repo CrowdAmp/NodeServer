@@ -17,8 +17,8 @@ var app = express()
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
 var influencerMetricsDict = {
-  "AlexRamos" : [0,0,0],
-  'rmayer9999' : [0,0,0] //total fans, total messages
+  "AlexRamos" : [0,0,1],
+  'rmayer9999' : [0,0,1] //total fans, total messages
 }
 
 var influencerIdToNameDict = {
