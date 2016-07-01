@@ -14,7 +14,7 @@ var requests = require('request');
 
 var app = express()
 
-var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33", 'rmayer9999' : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
+var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
 var influencerMetricsDict = {
   "AlexRamos" : [0,0,1],
@@ -449,6 +449,12 @@ function sendMessageToUser(snapshotPath,userId, messageContent, messageType) {
 var onesignal = require('node-opensignal-api');
 var onesignal_client = onesignal.createClient();
  
+function listenForPushIdUpdates() {
+  firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
+    var influencerId = snapshot.key
+      pushNotificationDict[influencerId] = snapshot.child(pushId).val()
+  })
+}
 
 function sendPushNotification(userIds, content) { 
   var restApiKey = 'N2Y2MWU1MDMtOTk3Zi00MDkzLWI3NjEtYTU0N2UwYjFjMGRh';
@@ -587,6 +593,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
+listenForPushIdUpdates()
 
 //sendTestRequest()
 
