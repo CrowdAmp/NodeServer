@@ -20,6 +20,10 @@ var influencerMetricsDict = {
   "AlexRamos" : [0,0] //total fans, total messages
 }
 
+var influencerIdToNameDict = {
+  'AlexRamos' : "Alex Ramos"
+}
+
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
@@ -475,10 +479,6 @@ app.post('/twiliowebhook/', function (req, res) {
             "fileName": "",
         }
 
-      //if !(let user.sendMessagesFrom = findSendMessagesFrom()) {
-      // user.sendMessagesFrom = defineSendMessagesFrom()
-      //}
-      // userContactInfoDict[req.body.From] = [false, user.sendMessagesFrom]
       var influencerId = phoneNumberToInfluencerIdDict[req.body.To]
 
       firebase.database().ref(influencerId + "/IndividualMessageData/" +  req.body.From + "/sendMessagesFrom").once('value', function(snapshot) {
@@ -497,20 +497,24 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
             userContactInfoDict[req.body.From] = [false, phoneNumberToSendFrom]
             addItemToFirebaseDatabase(influencerId + "/phoneNumbersInService/", phoneNumberToSendFrom, numberOfUsersOnPhone + 1)
+            addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
+            addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
+            addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
+            addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
+            addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
+            sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
+
           })
         } else {
           userContactInfoDict[req.body.From] = [false, snapshot.child("/").val()]
+          addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
+          addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
+          addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
+          addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
+          addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
         }
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
-      })
-
+     })
     }
-
-
     //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
     res.send()
