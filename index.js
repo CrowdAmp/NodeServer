@@ -298,8 +298,7 @@ function listenForGroupedMessages() {
           addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
           if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
             console.log(snapshot.child("senderId").val())
-              postInfluencerDidRespondToPrompt(infuencerName, snapshot)
-            
+              postInfluencerDidRespondToPrompt(influencerName, snapshot)
           }
         }
       })
