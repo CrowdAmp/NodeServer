@@ -452,7 +452,7 @@ var onesignal_client = onesignal.createClient();
 function listenForPushIdUpdates() {
   firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
-      pushNotificationDict[influencerId] = snapshot.child(pushId).val()
+      pushNotificationDict[influencerId] = snapshot.child("pushId").val()
   })
 }
 
