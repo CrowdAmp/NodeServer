@@ -494,11 +494,10 @@ app.post('/twiliowebhook/', function (req, res) {
               }
             })
             console.log("phoneNumberToSendFrom: " + phoneNumberToSendFrom)
+            addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
+            userContactInfoDict[req.body.From] = [false, phoneNumberToSendFrom]
+            addItemToFirebaseDatabase(influencerId + "/phoneNumbersInService/", phoneNumberToSendFrom, numberOfUsersOnPhone + 1)
           })
-
-          addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
-          userContactInfoDict[req.body.From] = [false, phoneNumberToSendFrom]
-          addItemToFirebaseDatabase(influencerId + "/phoneNumbersInService/", phoneNumberToSendFrom, numberOfUsersOnPhone + 1)
         } else {
           userContactInfoDict[req.body.From] = [false, snapshot.child("/").val()]
         }
