@@ -479,16 +479,30 @@ app.post('/twiliowebhook/', function (req, res) {
       // user.sendMessagesFrom = defineSendMessagesFrom()
       //}
       // userContactInfoDict[req.body.From] = [false, user.sendMessagesFrom]
+      var influencerId = phoneNumberToInfluencerIdDict[req.body.To]
 
-      firebase.database().ref(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From + "/sendMessagesFrom").once('value', function(snapshot) {
+      firebase.database().ref(influencerId + "/IndividualMessageData/" +  req.body.From + "/sendMessagesFrom").once('value', function(snapshot) {
         
-        console.log("MESSAGE FROM: " + snapshot.child("/").val())
+        if (snapshot.child("/").val() == null) {
+          firebase.database().ref(influencerId + '/phoneNumbersInService').once('value', function(snapshot) {
+            var numberOfUsersOnPhone = 10000
+            var phoneNumberToSendFrom = ""
+            snapshot.forEach(function(childSnapshot) {
+              if (childSnapshot.child("/").val() < numberOfUsersOnPhone) {
+                console.log("IN FOR EACH LOOP")
+                phoneNumberToSendFrom = childSnapshot.key
+              }
+            })
+            console.log("FINISHED FOR EACH LOOP")
+          })
+
+          addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+12512654321")
+        }
         
         userContactInfoDict[req.body.From] = [false, "+12512654321"]
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
-        addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+12512654321")
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
