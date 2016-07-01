@@ -505,7 +505,7 @@ app.post('/twiliowebhook/', function (req, res) {
             sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
             setTimeout(function() {
               sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
-            }, 3000);
+            }, 50000);
           })
         } else {
           userContactInfoDict[req.body.From] = [false, snapshot.child("/").val()]
