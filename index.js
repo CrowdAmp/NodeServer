@@ -489,27 +489,25 @@ app.post('/twiliowebhook/', function (req, res) {
             var phoneNumberToSendFrom = ""
             snapshot.forEach(function(childSnapshot) {
               if (childSnapshot.child("/").val() < numberOfUsersOnPhone) {
-                console.log("IN FOR EACH LOOP")
+                numberOfUsersOnPhone = childSnapshot.child("/").val()
                 phoneNumberToSendFrom = childSnapshot.key
               }
             })
-            console.log("FINISHED FOR EACH LOOP")
+            console.log("phoneNumberToSendFrom: " + phoneNumberToSendFrom)
           })
 
-          addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", "+12512654321")
+          addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
+          userContactInfoDict[req.body.From] = [false, phoneNumberToSendFrom]
+          addItemToFirebaseDatabase(influencerId + "/phoneNumbersInService/", phoneNumberToSendFrom, numberOfUsersOnPhone + 1)
+        } else {
+          userContactInfoDict[req.body.From] = [false, snapshot.child("/").val()]
         }
-        
-        userContactInfoDict[req.body.From] = [false, "+12512654321"]
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
         addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
-
       })
-
-      
-      
 
     }
 
