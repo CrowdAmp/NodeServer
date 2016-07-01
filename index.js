@@ -49,11 +49,11 @@ app.get('/', function(request, response) {
     response.send("hello world");
 });
 
-app.get('/asdf/:id', function(request, response) {
+app.get('/getTotalFans/:id', function(request, response) {
   response.send(influencerMetricsDict[request.params.id][0].toString())
 })
 
-app.get('/getTotalFans/:id', function(request, response) {
+app.get('/getTotalMessages/:id', function(request, response) {
     response.send(influencerMetricsDict[request.params.id][1].toString())
 })
 
