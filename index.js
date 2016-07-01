@@ -480,7 +480,7 @@ app.post('/twiliowebhook/', function (req, res) {
       //}
       // userContactInfoDict[req.body.From] = [false, user.sendMessagesFrom]
 
-      firebase.database().ref(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom").once('value')
+      firebase.database().ref(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From + "/sendMessagesFrom").once('value')
       then(function(snapshot) {
         console.log("QUERYING FOR sendMessagesFrom DATA")
         console.log(snapshot.key)
