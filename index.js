@@ -50,11 +50,11 @@ app.get('/', function(request, response) {
 });
 
 app.get('/getTotalFans', function(request, response) {
-  response.send(influencerMetricsDict['AlexRamos'][0])
+  response.send(influencerMetricsDict['AlexRamos'][0].toString())
 })
 
 app.get('/getTotalMessages', function(request, response) {
-    response.send(influencerMetricsDict['AlexRamos'][1])
+    response.send(influencerMetricsDict['AlexRamos'][1].toString())
 })
 
 app.post('/test', function(request, response) {
