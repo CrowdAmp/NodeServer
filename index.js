@@ -519,7 +519,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
-    res.send()
+    res.sendStatus(200)
       
         //res.sendStatus(200)                                                                                                                   
 });
