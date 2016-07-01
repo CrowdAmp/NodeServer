@@ -71,16 +71,17 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
   var type = request.body.type
   var influencerId = request.body.influencerId
   var userIdList = request.body.userIdList
+  var mediaDownloadUrl = request.body.mediaDownloadUrl
 
   for (var i = 0; i < userIdList.length; i++) {  
     console.log("sendingMesage to userId: " + userIdList[i])  
-    forwardMessageFromServerToUsers(content, type, influencerId + "/IndividualMessageData/", userIdList[i])
+    forwardMessageFromServerToUsers(content, type, influencerId + "/IndividualMessageData/", userIdList[i], mediaDownloadUrl)
   }
   response.sendStatus(200)
 
 })
 
-function forwardMessageFromServerToUsers(content, type, firebasePath, userId) {
+function forwardMessageFromServerToUsers(content, type, firebasePath, userId, mediaDownloadUrl) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
   var messageItemDict = {}
   if (type == "text") {
@@ -101,7 +102,7 @@ function forwardMessageFromServerToUsers(content, type, firebasePath, userId) {
       "type": "image",
       "fileName": content,
       "hasBeenForwarded": true,
-      "mediaDownloadUrl": ""
+      "mediaDownloadUrl": mediaDownloadUrl
     }
   } else {
     return
@@ -115,7 +116,9 @@ function forwardMessageFromServerToUsers(content, type, firebasePath, userId) {
     if (type == "text") {
       sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], content, "")
     } else if (type == "image") {
-      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], "", "url")
+
+
+      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], "", mediaDownloadUrl)
     }
   }
 }
@@ -172,7 +175,9 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
          type: snapshot.child("type").val(),
          userId: userId,
          influencerId: influencerId,
-         sentByUser: snapshot.child("sentByUser").val()
+         sentByUser: snapshot.child("sentByUser").val(),
+         mediaDownloadUrl: snapshot.child("mediaDownloadUrl").val()
+
        },
 
 
@@ -211,7 +216,8 @@ function postInfluencerDidRespondToPrompt(influencerId, snapshot) {
          content: snapshotContent,
          type: snapshot.child("type").val(),
          phraseId: snapshot.child("senderId").val(),
-         influencerId: influencerId
+         influencerId: influencerId,
+         mediaDownloadUrl: snapshot.child("mediaDownloadUrl").val()
        },
 
 
