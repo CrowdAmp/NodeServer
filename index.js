@@ -457,7 +457,7 @@ function sendPushNotification(userIds, content) {
 
 app.post('/twiliowebhookoutbound/', function (req, res) {
 
-
+  console.log("TWILIOWEBHOOKOUTBOUND")
         res.send()
         //res.sendStatus(200)                                                                                                                   
 });
