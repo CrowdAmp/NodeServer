@@ -28,7 +28,7 @@ var influencerIdToNameDict = {
 
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "AlexRamos",
-  "+12512654321" : "AlexRamos"
+  "+12512654321" : "rmayer9999"
 }
 var userContactInfoDict = {
   //"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
@@ -519,7 +519,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
-    res.sendStatus(200)
+    res.sendStatus()
       
         //res.sendStatus(200)                                                                                                                   
 });
