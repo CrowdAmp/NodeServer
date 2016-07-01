@@ -17,8 +17,8 @@ var app = express()
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
 var influencerMetricsDict = {
-  "AlexRamos" : [0,0],
-  'rmayer9999' : [0,0] //total fans, total messages
+  "AlexRamos" : [0,0,0],
+  'rmayer9999' : [0,0,0] //total fans, total messages
 }
 
 var influencerIdToNameDict = {
@@ -62,6 +62,10 @@ app.get('/getTotalFans/:id', function(request, response) {
 
 app.get('/getTotalMessages/:id', function(request, response) {
     response.send(influencerMetricsDict[request.params.id][1].toString())
+})
+
+app.get('/getNewMessages/:id', function(request, response) {
+    response.send(influencerMetricsDict[request.params.id][2].toString())
 })
 
 app.post('/test', function(request, response) {
