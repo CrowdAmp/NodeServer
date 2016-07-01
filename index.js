@@ -65,6 +65,15 @@ app.get('/getTotalMessages/:id', function(request, response) {
 })
 
 app.get('/getNewMessages/:id', function(request, response) {
+  var totalUnreadMessages = 0
+  firebase.database().ref("/" + request.params.id + "/GroupedMessageData").once('value', function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      if (childSnapshot.child('influencerDidRead').val() == false) {
+        totalUnreadMessages += 1
+      }
+    })
+    response.send(totalUnreadMessages.toString())
+  })
     response.send(influencerMetricsDict[request.params.id][2].toString())
 })
 
