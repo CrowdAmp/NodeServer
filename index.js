@@ -14,7 +14,7 @@ var requests = require('request');
 
 var app = express()
 
-var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
+var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33", 'rmayer9999' : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
 var influencerMetricsDict = {
   "AlexRamos" : [0,0,1],
