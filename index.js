@@ -49,11 +49,11 @@ app.get('/', function(request, response) {
     response.send("hello world");
 });
 
-app.post('/getTotalFans', function(request, response) {
+app.get('/getTotalFans', function(request, response) {
   response.send(influencerMetricsDict['AlexRamos'][0])
 })
 
-app.post('/getTotalMessages', function(request, response) {
+app.get('/getTotalMessages', function(request, response) {
     response.send(influencerMetricsDict['AlexRamos'][1])
 })
 
