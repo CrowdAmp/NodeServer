@@ -367,6 +367,8 @@ function listenForNewMessages() {
         userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
       }
 
+      influencerMetricsDict[influencerId][0] += 1 
+
       var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
   		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
@@ -389,6 +391,9 @@ function listenForNewMessages() {
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           }
+          influencerMetricsDict[influencerId][1] += 1 
+
+
   		})
     });
   })
