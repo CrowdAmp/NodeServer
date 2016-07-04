@@ -21,7 +21,7 @@ var influencerMetricsDict = {
   'rmayer9999' : [0,0,1] //total fans, total messages
 }
 
-var influencerIdToNameDict = {
+var influencerIdToNameDict = { 
   'AlexRamos' : "Alex Ramos",
   'rmayer9999' : "Ruben Mayer"
 }
