@@ -120,6 +120,11 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
 
 })
 
+app.get('/testPushNotifications', function(request, response) {
+  sendPushNotification(["5f20048a-4cda-4fcf-b375-aa746beacfa3", "ec178ffe-5005-4a6b-bb62-80f4d640c515", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+  response.sendStatus(200)
+})
+
 //!
 function forwardMessageFromServerToUsers(influencerId, content, type, firebasePath, userId, mediaDownloadUrl) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
@@ -474,7 +479,7 @@ function sendPushNotification(userIds, content) {
     contents: {
       'en': content
     },
-    include_player_ids: ["8e70c1e0-d3ce-43a7-8a69-79477762bf33"],
+    include_player_ids: userIds,
     isIos: true
   };
   onesignal_client.notifications.create(restApiKey, params, function (err, response) {
