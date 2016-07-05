@@ -35,7 +35,10 @@ var phoneNumberToInfluencerIdDict = {
   "+12512654321" : "rmayer9999"
 }
 var userContactInfoDict = {
-  //"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]
+  //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
+  'AlexRamos' : {},
+  'rmayer9999' : {},
+  'crowdamptester': {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
@@ -107,13 +110,14 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
 
   for (var i = 0; i < userIdList.length; i++) {  
     console.log("sendingMesage to userId: " + userIdList[i])  
-    forwardMessageFromServerToUsers(content, type, influencerId + "/IndividualMessageData/", userIdList[i], mediaDownloadUrl)
+    forwardMessageFromServerToUsers(influencerId, content, type, influencerId + "/IndividualMessageData/", userIdList[i], mediaDownloadUrl)
   }
   response.sendStatus(200)
 
 })
 
-function forwardMessageFromServerToUsers(content, type, firebasePath, userId, mediaDownloadUrl) {
+//!
+function forwardMessageFromServerToUsers(influencerId, content, type, firebasePath, userId, mediaDownloadUrl) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
   var messageItemDict = {}
   if (type == "text") {
@@ -146,11 +150,11 @@ function forwardMessageFromServerToUsers(content, type, firebasePath, userId, me
 
   if (!userContactInfoDict[userId][0]) {
     if (type == "text") {
-      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], content, "")
+      sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], content, "")
     } else if (type == "image") {
 
 
-      sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], "", mediaDownloadUrl)
+      sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
   }
 }
@@ -344,8 +348,8 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
   addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
 
-  if (!userContactInfoDict[userId][0]) {
-    sendMessageThroughTwilio(userId, userContactInfoDict[userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
+  if (!userContactInfoDict[influencerId][userId][0]) {
+    sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
   }  
 }
 
@@ -357,7 +361,7 @@ function listenForMessageAll() {
           addItemToFirebaseDatabase('/' + influencerId + "/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
           console.log("ListeningForMessageAll " + snapshot.key)
         if (!snapshot.child("sentByUser").val()) {
-          for(key in userContactInfoDict) {
+          for(key in userContactInfoDict[influencerId]) {
             forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
           }
           var sendToAllResponseDict = {
@@ -369,7 +373,7 @@ function listenForMessageAll() {
                   "hasBeenForwarded": false,
                   "mediaDownloadUrl": ""
           }
-          if (Object.keys(userContactInfoDict).length > 0) {
+          if (Object.keys(userContactInfoDict[influencerId]).length > 0) {
             addItemToFirebaseDatabase(influencerId + "/MessageAllData/sendToAll", undefined, sendToAllResponseDict)
           } 
         }
@@ -385,7 +389,7 @@ function listenForNewMessages() {
     //var snapshotPath = "/" + snapshot.key + 'AlexRamos/IndividualMessageData'
     firebase.database().ref(influencerId + '/IndividualMessageData').on('child_added', function(snapshot) {
       if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
-        userContactInfoDict[snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+        userContactInfoDict[influencerId][snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
       }
 
       influencerMetricsDict[influencerId][0] += 1 
@@ -396,9 +400,9 @@ function listenForNewMessages() {
   			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
       		console.log(snapshot.child("text").val())
           console.log("senderId: " + snapshot.child("senderId").val())
-          console.log(userContactInfoDict)
+          console.log(userContactInfoDict[influencerId])
 
-          var userContactInfo = userContactInfoDict[snapshot.child("senderId").val()]
+          var userContactInfo = userContactInfoDict[influencerId][snapshot.child("senderId").val()]
           if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
             console.log("FORWARDING MESSAGE IN LISTENFORNEWMESSAGES")
             console.log("should forward message")
@@ -518,7 +522,7 @@ app.post('/twiliowebhook/', function (req, res) {
             })
             console.log("phoneNumberToSendFrom: " + phoneNumberToSendFrom)
             addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
-            userContactInfoDict[req.body.From] = [false, phoneNumberToSendFrom]
+            userContactInfoDict[influencerId][req.body.From] = [false, phoneNumberToSendFrom]
             addItemToFirebaseDatabase(influencerId + "/phoneNumbersInService/", phoneNumberToSendFrom, numberOfUsersOnPhone + 1)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
@@ -531,7 +535,7 @@ app.post('/twiliowebhook/', function (req, res) {
             }, 50000);
           })
         } else {
-          userContactInfoDict[req.body.From] = [false, snapshot.child("/").val()]
+          userContactInfoDict[influencerId][req.body.From] = [false, snapshot.child("/").val()]
           addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "userDidRead", true)
           addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "influencerDidRead", false)
           addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
