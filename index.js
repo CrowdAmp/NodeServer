@@ -402,7 +402,7 @@ function listenForNewMessages() {
       console.log(snapshotPath)
   		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
   			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
-      		console.log(snapshot.child("text").val())
+      		console.log("LISTENING FOR MESSAGE: " + snapshot.child("text").val())
           console.log("senderId: " + snapshot.child("senderId").val())
           console.log(userContactInfoDict[influencerId])
 
@@ -536,7 +536,7 @@ app.post('/twiliowebhook/', function (req, res) {
             sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
             setTimeout(function() {
               sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
-            }, 50000);
+            }, 30000);
           })
         } else {
           userContactInfoDict[influencerId][req.body.From] = [false, snapshot.child("/").val()]
