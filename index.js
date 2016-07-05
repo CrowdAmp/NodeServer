@@ -420,7 +420,7 @@ function listenForNewMessages() {
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           }
-          if snapshot.child('text').val() != null {
+          if (snapshot.child('text').val() != null) {
             influencerMetricsDict[influencerId][1] += 1 
           }
 
