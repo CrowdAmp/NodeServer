@@ -40,7 +40,8 @@ var userContactInfoDict = {
   //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
   'AlexRamos' : {},
   'rmayer9999' : {},
-  'crowdamptester': {}
+  'crowdamptester': {},
+  'electionfails' : {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
