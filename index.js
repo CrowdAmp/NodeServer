@@ -420,8 +420,9 @@ function listenForNewMessages() {
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
           }
-          influencerMetricsDict[influencerId][1] += 1 
-
+          if snapshot.child('text').val() != null {
+            influencerMetricsDict[influencerId][1] += 1 
+          }
 
   		})
     });
