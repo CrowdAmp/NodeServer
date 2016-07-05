@@ -25,14 +25,16 @@ var influencerMetricsDict = {
 var influencerIdToNameDict = { 
   'AlexRamos' : "Alex Ramos",
   'rmayer9999' : "Ruben Mayer",
-  'crowdamptester': "CrowdAmp"
+  'crowdamptester': "CrowdAmp",
+  'electionfails' : "Test Account"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "crowdamptester",
-  "+12512654321" : "rmayer9999"
+  "+12512654321" : "rmayer9999",
+  '+18184854321' : "electionfails"
 }
 var userContactInfoDict = {
   //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
