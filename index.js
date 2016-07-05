@@ -79,7 +79,7 @@ app.get('/getNewMessages/:id', function(request, response) {
     })
     response.send(totalUnreadMessages.toString())
   })
-    response.send(influencerMetricsDict[request.params.id][2].toString())
+    //response.send(influencerMetricsDict[request.params.id][2].toString())
 })
 
 app.post('/test', function(request, response) {
@@ -148,7 +148,7 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
   addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
 
-  if (!userContactInfoDict[userId][0]) {
+  if (!userContactInfoDict[influencerId][userId][0]) {
     if (type == "text") {
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], content, "")
     } else if (type == "image") {
@@ -365,7 +365,7 @@ function listenForMessageAll() {
             forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
           }
           var sendToAllResponseDict = {
-                  "text": "Message sent succesfully to " + Object.keys(userContactInfoDict).length + " fans.",
+                  "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
                   "senderId": "sendToAll",
                   "sentByUser": true,
                   "type": "text",
