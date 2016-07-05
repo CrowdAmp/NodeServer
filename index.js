@@ -18,18 +18,20 @@ var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"
 
 var influencerMetricsDict = {
   "AlexRamos" : [0,0,1],
-  'rmayer9999' : [0,0,1] //total fans, total messages
+  'rmayer9999' : [0,0,1],
+  'crowdamptester' : [0,0,1] //total fans, total messages
 }
 
 var influencerIdToNameDict = { 
   'AlexRamos' : "Alex Ramos",
-  'rmayer9999' : "Ruben Mayer"
+  'rmayer9999' : "Ruben Mayer",
+  'crowdamptester': "CrowdAmp"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
-  "+19804304321" : "AlexRamos",
+  "+19804304321" : "crowdamptester",
   "+12512654321" : "rmayer9999"
 }
 var userContactInfoDict = {
