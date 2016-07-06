@@ -33,7 +33,7 @@ var influencerIdToNameDict = {
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
 var phoneNumberToInfluencerIdDict = {
-  "+19804304321" : "crowdamptester",
+  "+19804304321" : "electionfails",
   "+12512654321" : "electionfails",
   '+18184854321' : "electionfails",
   '+19197525252' : 'electionfails',
@@ -545,6 +545,8 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
+            sendIntroFlow(req, phoneNumberToSendFrom)
+
            // sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
             setTimeout(function() {
              // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
@@ -566,6 +568,18 @@ app.post('/twiliowebhook/', function (req, res) {
       
         //res.sendStatus(200)                                                                                                                   
 });
+
+function sendIntroFlow(req, phoneNumberToSendFrom) {
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
+  setTimeout(function() {
+    sendMessageThroughTwilio(req.body.From, req.body.To, "I talk and act like Ariana Grande ;)", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
+  setTimeout(function() {
+    sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Ariana's Life. Would you like that?", "")
+  }, 10000);
+  }, 10000);
+}
+
+
 
 function sendMessageThroughTwilio(to, from, text, media) {
   console.log("sending messageFromTwilio: " + to + from + text + media)
