@@ -579,11 +579,12 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
       sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Magnus' Life, and the things he posts on social media. Would you like that?", "")
     }, 20000);
     }, 10000);
+    forwardMessageFromServerToUsers('electionfails', 'magnus', 'text', firebasePath, req.body.From, '')
 
   } else {
 
     sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
-    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3. I talk and act like Arianna Grande", "")
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3. I talk and act like Ariana Grande", "")
 
     setTimeout(function() {
       sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
