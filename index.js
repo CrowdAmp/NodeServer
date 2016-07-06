@@ -34,8 +34,10 @@ var influencerIdToNameDict = {
 
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "crowdamptester",
-  "+12512654321" : "rmayer9999",
-  '+18184854321' : "electionfails"
+  "+12512654321" : "electionfails",
+  '+18184854321' : "electionfails",
+  '+19197525252' : 'electionfails',
+
 }
 var userContactInfoDict = {
   //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
@@ -530,6 +532,10 @@ app.post('/twiliowebhook/', function (req, res) {
                 phoneNumberToSendFrom = childSnapshot.key
               }
             })
+
+            //ADDED
+            phoneNumberToSendFrom = req.body.To
+
             console.log("phoneNumberToSendFrom: " + phoneNumberToSendFrom)
             addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
             userContactInfoDict[influencerId][req.body.From] = [false, phoneNumberToSendFrom]
