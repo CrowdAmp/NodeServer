@@ -575,10 +575,10 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
 
   setTimeout(function() {
     sendMessageThroughTwilio(req.body.From, req.body.To, "I talk and act like Ariana Grande ;)", "")
-    sendMessageThroughTwilio(req.body.From, req.body.To, "I talk and act like Ariana Grande ;)", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
+    sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
   setTimeout(function() {
     sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Ariana's Life. Would you like that?", "")
-  }, 10000);
+  }, 20000);
   }, 10000);
 }
 
