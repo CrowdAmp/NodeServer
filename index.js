@@ -570,17 +570,29 @@ app.post('/twiliowebhook/', function (req, res) {
 });
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
-  sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
-  sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3. I talk and act like Arianna Grande", "")
+  if (req.body.To == '+13127578787') {
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey, thanks for messaging me this is Magnus Bot. I talk and act like Magnus Carlsen", "")
 
-  setTimeout(function() {
-    sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
-  setTimeout(function() {
-    sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Ariana's Life. Would you like that?", "")
-  }, 20000);
-  }, 10000);
+    setTimeout(function() {
+      sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
+    setTimeout(function() {
+      sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Magnus' Life, and the things he posts on social media. Would you like that?", "")
+    }, 20000);
+    }, 10000);
+
+  } else {
+
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3. I talk and act like Arianna Grande", "")
+
+    setTimeout(function() {
+      sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://66.media.tumblr.com/1413af2a187cc227953599af9be8c5f9/tumblr_o9kwu6rB5i1tg72yro2_250.gif")
+    setTimeout(function() {
+      sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Ariana's Life. Would you like that?", "")
+    }, 20000);
+    }, 10000);
+  }
 }
-
 
 
 function sendMessageThroughTwilio(to, from, text, media) {
