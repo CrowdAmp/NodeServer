@@ -109,6 +109,7 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
 app.post('/shouldSendMessageToUsers', function(request, response) {
   console.log("shouleSendMessageToUsers")
   var content = request.body.content
+  console.log("CONTENT: " + content)
   var type = request.body.type
   var influencerId = request.body.influencerId
   var userIdList = request.body.userIdList
