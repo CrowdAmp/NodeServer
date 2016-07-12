@@ -20,7 +20,8 @@ var influencerMetricsDict = {
   "AlexRamos" : [0,0,1],
   'rmayer9999' : [0,0,1],
   'crowdamptester' : [0,0,1],
-  'electionfails' : [0,0,1] //total fans, total messages
+  'electionfails' : [0,0,1],
+  'morgskatherinee' : [0,0,1] //total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -28,6 +29,7 @@ var influencerIdToNameDict = {
   'rmayer9999' : "Ruben Mayer",
   'crowdamptester': "CrowdAmp",
   'electionfails' : "Test Account"
+  'morgskatherinee': "Katherinee Morgan"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -565,7 +567,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
-    res.sendStatus()
+    //res.sendStatus()
       
         //res.sendStatus(200)                                                                                                                   
 });
