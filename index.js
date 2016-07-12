@@ -28,7 +28,7 @@ var influencerIdToNameDict = {
   'AlexRamos' : "Alex Ramos",
   'rmayer9999' : "Ruben Mayer",
   'crowdamptester': "CrowdAmp",
-  'electionfails' : "Test Account"
+  'electionfails' : "Test Account",
   'morgskatherinee': "Katherinee Morgan"
 }
 
