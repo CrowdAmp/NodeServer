@@ -459,6 +459,8 @@ function listenForNewMessages() {
 //Adds item to firebase database referencePath is a string, itemDictionary is a dict, and itemId is string. No return value.
 //If itemId is undefined, adds with auto generated id
 function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
+  try {
+
   if(itemId) {
     console.log("Adding Item to Firebase with id: " + itemId)
     messageRef = firebase.database().ref(referencePath).child(itemId)
@@ -467,7 +469,10 @@ function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
     messageRef = firebase.database().ref(referencePath).push()
     messageRef.set(itemDictionary)
   }
+} catch(err) {
+  console.log("error in add item to firebase: " + error)
 }
+
 
 function sendMessageToUser(snapshotPath,userId, messageContent, messageType) {
   messageRef = firebase.database().ref(snapshotPath).push()
