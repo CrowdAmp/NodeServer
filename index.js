@@ -21,7 +21,7 @@ var influencerMetricsDict = {
   'rmayer9999' : [0,0,1],
   'crowdamptester' : [0,0,1],
   'electionfails' : [0,0,1],
-  'morgskatherinee' : [0,0,1] //total fans, total messages
+  'morggkatherinee' : [0,0,1] //total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -29,7 +29,7 @@ var influencerIdToNameDict = {
   'rmayer9999' : "Ruben Mayer",
   'crowdamptester': "CrowdAmp",
   'electionfails' : "Test Account",
-  'morgskatherinee': "Katherinee Morgan"
+  'morggkatherinee': "Katherinee Morgan"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -39,6 +39,7 @@ var phoneNumberToInfluencerIdDict = {
   "+12512654321" : "electionfails",
   '+18184854321' : "electionfails",
   '+19197525252' : 'electionfails',
+  '+6506678787' : 'morggkatherinee'
 
 }
 var userContactInfoDict = {
@@ -46,7 +47,8 @@ var userContactInfoDict = {
   'AlexRamos' : {},
   'rmayer9999' : {},
   'crowdamptester': {},
-  'electionfails' : {}
+  'electionfails' : {},
+  'morggkatherinee': {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
