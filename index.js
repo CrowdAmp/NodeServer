@@ -29,7 +29,7 @@ var influencerIdToNameDict = {
   'rmayer9999' : "Ruben Mayer",
   'crowdamptester': "CrowdAmp",
   'electionfails' : "Test Account",
-  'morggkatherinee': "Katherinee Morgan"
+  'morggkatherinee': "Katherine Morgan"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -553,7 +553,7 @@ app.post('/twiliowebhook/', function (req, res) {
             })
 
             //ADDED
-            phoneNumberToSendFrom = req.body.To
+            //phoneNumberToSendFrom = req.body.To
 
             console.log("phoneNumberToSendFrom: " + phoneNumberToSendFrom)
             addItemToFirebaseDatabase(influencerId + "/IndividualMessageData/" +  req.body.From, "sendMessagesFrom", phoneNumberToSendFrom)
@@ -565,7 +565,7 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
-            sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
+            sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! This is " + influencerIdToNameDict[influencerId] + " thanks for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
 // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
@@ -590,7 +590,7 @@ app.post('/twiliowebhook/', function (req, res) {
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+16506678787') {
-    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey, thanks for messaging me this is Morgan Katherinee.", "")
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
 
     //setTimeout(function() {
      // sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
