@@ -599,7 +599,7 @@ app.post('/twiliowebhook/', function (req, res) {
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+16506678787') {
-    sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
+    sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
 
     //setTimeout(function() {
      // sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
