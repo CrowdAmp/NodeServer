@@ -41,7 +41,8 @@ var phoneNumberToInfluencerIdDict = {
   '+19197525252' : 'electionfails',
   '+16506678787' : 'morggkatherinee',
   '+19282278787' : 'morggkatherinee',
-  '+17573478787' : 'morggkatherinee'
+  '+17573478787' : 'morggkatherinee',
+  '+12156078787': 'morggkatherinee'
 
 
 }
