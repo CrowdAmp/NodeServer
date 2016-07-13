@@ -470,7 +470,7 @@ function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
     messageRef.set(itemDictionary)
   }
 } catch(err) {
-  console.log("error in add item to firebase: " + error )
+  console.log("error in add item to firebase: " + err)
 }
 }
 
