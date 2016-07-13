@@ -39,7 +39,9 @@ var phoneNumberToInfluencerIdDict = {
   "+12512654321" : "electionfails",
   '+18184854321' : "electionfails",
   '+19197525252' : 'electionfails',
-  '+16506678787' : 'morggkatherinee'
+  '+16506678787' : 'morggkatherinee',
+  '+19282278787' : 'morggkatherinee'
+
 
 }
 var userContactInfoDict = {
@@ -562,11 +564,11 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "timestamp", firebase.database.ServerValue.TIMESTAMP)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
-            sendIntroFlow(req, phoneNumberToSendFrom)
 
-           // sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
+            sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! this is " + influencerIdToNameDict[influencerId] + " thank's for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
             setTimeout(function() {
-             // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
+              sendIntroFlow(req, phoneNumberToSendFrom)
+// sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
             }, 30000);
           })
         } else {
