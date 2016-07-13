@@ -29,7 +29,7 @@ var influencerIdToNameDict = {
   'rmayer9999' : "Ruben Mayer",
   'crowdamptester': "CrowdAmp",
   'electionfails' : "Test Account",
-  'morggkatherinee': "Katherine Morgan"
+  'morggkatherinee': "Morgan Katherine"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
