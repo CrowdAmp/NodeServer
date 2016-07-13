@@ -59,6 +59,19 @@ app.use(bodyParser.json())
 var messageCount = 0
 
 
+var test1 = 0
+app.get('/test1', function(request, response) {
+  test1 += 1
+  console.log("Test1 COUNT: " + test1)
+    response.redirect("https://www.youtube.com/watch?v=PrcdSszRtWo");
+});
+
+var test2 = 0
+app.get('/test2', function(request, response) {
+  test2 += 1
+  console.log("Test2 COUNT: " + test2)
+    response.redirect("https://www.youtube.com/watch?v=1ekZEVeXwek");
+});
 
 
 
@@ -414,7 +427,6 @@ function listenForNewMessages() {
   			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
       		console.log("LISTENING FOR MESSAGE: " + snapshot.child("text").val())
           console.log("senderId: " + snapshot.child("senderId").val())
-          console.log(userContactInfoDict[influencerId])
 
           var userContactInfo = userContactInfoDict[influencerId][snapshot.child("senderId").val()]
           if(userContactInfo && userContactInfo[0] == false && snapshot.child("sentByUser").val() == false && snapshot.child("hasBeenForwarded").val() == false) {
