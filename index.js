@@ -587,16 +587,16 @@ app.post('/twiliowebhook/', function (req, res) {
 });
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
-  if (req.body.To == '+13127578787') {
-    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey, thanks for messaging me this is Magnus Bot. I talk and act like Magnus Carlsen", "")
+  if (req.body.To == '+16506678787') {
+    sendMessageThroughTwilio(req.body.From, req.body.To, "Hey, thanks for messaging me this is Morgan Katherinee.", "")
 
-    setTimeout(function() {
-      sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
-    setTimeout(function() {
-      sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Magnus' Life, and the things he posts on social media. Would you like that?", "")
-    }, 20000);
-    }, 10000);
-    forwardMessageFromServerToUsers('electionfails', 'magnus', 'text', firebasePath, req.body.From, '')
+    //setTimeout(function() {
+     // sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
+    //setTimeout(function() {
+    //  sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Magnus' Life, and the things he posts on social media. Would you like that?", "")
+    //}, 20000);
+    //}, 10000);
+    //forwardMessageFromServerToUsers('electionfails', 'magnus', 'text', firebasePath, req.body.From, '')
 
   } else {
 
