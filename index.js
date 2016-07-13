@@ -529,6 +529,7 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
 //receives inbound message requests from twilio
 app.post('/twiliowebhook/', function (req, res) {
     console.log("MESSAGE BODY " + req.body.Body)
+    if (req.body.Body != undefined) {
     var body = req.body.Body
     if (body == "") {
             body = "*User Sent Image*"
@@ -589,6 +590,7 @@ app.post('/twiliowebhook/', function (req, res) {
     }
     //sendMessageThroughTwilio(req.body.From, req.body.To, "Wooooo!", "")
     console.log("message number" + req.body.From)
+  }
     //res.sendStatus()
       
         //res.sendStatus(200)                                                                                                                   
