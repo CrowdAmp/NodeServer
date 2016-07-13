@@ -39,7 +39,7 @@ var phoneNumberToInfluencerIdDict = {
   "+12512654321" : "electionfails",
   '+18184854321' : "electionfails",
   '+19197525252' : 'electionfails',
-  '+6506678787' : 'morggkatherinee'
+  '+16506678787' : 'morggkatherinee'
 
 }
 var userContactInfoDict = {
