@@ -625,7 +625,7 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
 
   } else if (req.body.To == '+18608214181'){ 
     sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is Kyle, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
-  }
+  } else {
 
     sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
     sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3. I talk and act like Ariana Grande", "")
