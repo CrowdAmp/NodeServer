@@ -53,7 +53,7 @@ var phoneNumberToInfluencerIdDict = {
   '+18313378787' : 'morggkatherinee',
   '+16468768787' : 'morggkatherinee',
   '+18608214181' : 'kyleexum',
-  '+18678214179' : 'kyleexum'
+  '+18608214179' : 'kyleexum'
 
 
 
@@ -588,7 +588,7 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
-            sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberToSendFrom + " The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
+            sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberFormatter(phoneNumberToSendFrom) + " The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
 // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
@@ -611,6 +611,14 @@ app.post('/twiliowebhook/', function (req, res) {
       
         //res.sendStatus(200)                                                                                                                   
 });
+
+function phoneNumberFormatter(phoneNumber) {
+  if (phoneNumber.length == 12) {
+    return "(" + phoneNumberToInfluencerIdDict.substring(2,5) + ") " + phoneNumber.substring(5,8) + '-' + phoneNumber(8,12)
+  } else {
+    return phoneNumber
+  }
+}
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+16506678787') {
