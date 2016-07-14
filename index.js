@@ -53,7 +53,12 @@ var phoneNumberToInfluencerIdDict = {
   '+18313378787' : 'morggkatherinee',
   '+16468768787' : 'morggkatherinee',
   '+18608214181' : 'kyleexum',
-  '+18608214179' : 'kyleexum'
+  '+18608214179' : 'kyleexum',
+  '+18608214140' : 'kyleexum',
+  '+18608214195' : 'kyleexum',
+  '+18608214127' : 'kyleexum'
+
+
 
 
 
