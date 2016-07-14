@@ -45,7 +45,9 @@ var phoneNumberToInfluencerIdDict = {
   '+12156078787': 'morggkatherinee',
   '+18589278787' : 'morggkatherinee',
   '+16786078787' : 'morggkatherinee',
-  '+18632678787' : 'morggkatherinee'
+  '+18632678787' : 'morggkatherinee',
+  '+14243478787' : 'morggkatherinee'
+
 
 
 }
