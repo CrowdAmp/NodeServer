@@ -614,7 +614,7 @@ app.post('/twiliowebhook/', function (req, res) {
 
 function phoneNumberFormatter(phoneNumber) {
   if (phoneNumber.length == 12) {
-    return "(" + phoneNumberToInfluencerIdDict.substring(2,5) + ") " + phoneNumber.substring(5,8) + '-' + phoneNumber(8,12)
+    return "(" + phoneNumber.substring(2,5) + ") " + phoneNumber.substring(5,8) + '-' + phoneNumber.substring(8,12)
   } else {
     return phoneNumber
   }
