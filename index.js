@@ -48,7 +48,8 @@ var phoneNumberToInfluencerIdDict = {
   '+18632678787' : 'morggkatherinee',
   '+14243478787' : 'morggkatherinee',
   '+13343778787' : 'morggkatherinee',
-  '+18313378787' : 'morggkatherinee'
+  '+18313378787' : 'morggkatherinee',
+  '+16468768787' : 'morggkatherinee'
 
 
 
@@ -581,7 +582,7 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
-            sendMessageThroughTwilio(req.body.From, req.body.To, "Hey! This is " + influencerIdToNameDict[influencerId] + " thanks for messaging me!!! I will be texting you from " + phoneNumberToSendFrom, "")
+            sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached Morgan Katherine from Musical.ly! This is an automatic message to let you know know that you can text her directly at: " + influencerIdToNameDict[influencerId] + " The purpose of this message is to filter any SPAM she would otherwise recieve.", "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
 // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
