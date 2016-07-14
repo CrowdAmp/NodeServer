@@ -197,9 +197,9 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
     return
   }
 
-
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
   addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
+  addItemToFirebaseDatabase(firebasePath +  userId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
 
   if (!userContactInfoDict[influencerId][userId][0]) {
     if (type == "text") {
