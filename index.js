@@ -42,11 +42,12 @@ var phoneNumberToInfluencerIdDict = {
   '+16506678787' : 'morggkatherinee',
   '+19282278787' : 'morggkatherinee',
   '+17573478787' : 'morggkatherinee',
-  '+12156078787': 'morggkatherinee',
+  '+12156078787' : 'morggkatherinee',
   '+18589278787' : 'morggkatherinee',
   '+16786078787' : 'morggkatherinee',
   '+18632678787' : 'morggkatherinee',
-  '+14243478787' : 'morggkatherinee'
+  '+14243478787' : 'morggkatherinee',
+  '+13343778787' : 'morggkatherinee'
 
 
 
