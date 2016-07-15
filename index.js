@@ -435,7 +435,7 @@ function listenForMessageAll() {
             timeout += 500
             //var userId = key
             setTimeout(function() {
-              console.log(userId)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+              console.log("KEY:" + key)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
             }, timeout)
 
           })
