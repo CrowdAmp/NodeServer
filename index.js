@@ -430,7 +430,9 @@ function listenForMessageAll() {
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
           for(key in userContactInfoDict[influencerId]) {
-            forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+            setTimeout(function() {
+              forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+            }, 1000)
           }
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
