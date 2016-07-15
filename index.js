@@ -433,7 +433,7 @@ function listenForMessageAll() {
           for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
             setTimeout(function() {
-              forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+              console.log(key)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
             }, timeout)
 
           }
