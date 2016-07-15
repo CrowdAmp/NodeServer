@@ -430,7 +430,7 @@ function listenForMessageAll() {
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
           var timeout = 0
-          for(key in userContactInfoDict[influencerId]) {
+          for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
             setTimeout(function() {
               forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
