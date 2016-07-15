@@ -11,6 +11,7 @@ var twilioSID = 'ACc060b1c85097363382c735e4b4f8cc4b'
 var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var requests = require('request');
+var _ = require('underscore')
 
 var app = express()
 
@@ -430,14 +431,14 @@ function listenForMessageAll() {
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
           var timeout = 0
-          for(var key in userContactInfoDict[influencerId]) {
+          _.each(userContactInfoDict[influencerId], function (key) {
             timeout += 500
-            var userId = key
+            //var userId = key
             setTimeout(function() {
               console.log(userId)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
             }, timeout)
 
-          }
+          })
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
                   "senderId": "sendToAll",
