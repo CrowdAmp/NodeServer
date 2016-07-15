@@ -243,7 +243,7 @@ try {
         if (!error) {
             console.log("body: " + response.body.test)
         } else {
-          console.log("error: " + error)
+          console.log("error1: " + error)
         }
     });
 
@@ -289,7 +289,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
           if (!error) {
             console.log("response: " + response.body.content)
           } else {
-            console.log("error: " + error)
+            console.log("error2: " + error)
           }
       });
 
@@ -329,7 +329,7 @@ function postInfluencerDidRespondToPrompt(influencerId, snapshot) {
           if (!error) {
             console.log("response: " + response.body.content)
           } else {
-            console.log("error: " + error)
+            console.log("error3: " + error)
           }
       });
 
@@ -429,10 +429,13 @@ function listenForMessageAll() {
           addItemToFirebaseDatabase('/' + influencerId + "/MessageAllData/sendToAll/" + snapshot.key, "hasBeenForwarded", true)
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
+          var timeout = 0
           for(key in userContactInfoDict[influencerId]) {
+            timeout += 500
             setTimeout(function() {
               forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
-            }, 1000)
+            }, timeout)
+
           }
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
