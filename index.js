@@ -431,14 +431,15 @@ function listenForMessageAll() {
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
           var timeout = 0
-          _.each(userContactInfoDict[influencerId], function (key) {
+          for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
-            //var userId = key
+            console.log('key1: ' + key)
+            var userId = key
             setTimeout(function() {
-              console.log("KEY:" + key)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+              console.log("key " + userId)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
             }, timeout)
 
-          })
+          }
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
                   "senderId": "sendToAll",
