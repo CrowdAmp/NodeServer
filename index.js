@@ -70,7 +70,9 @@ var phoneNumberToInfluencerIdDict = {
   '+18607173126' : 'kyleexum',
   '+18607173194' : 'kyleexum',
   '+18603702198' : 'kyleexum',
-  '+18603702136' : 'kyleexum'
+  '+18603702136' : 'kyleexum',
+  '+18603081572' : 'kyleexum',
+  '+18603081503' : 'kyleexum'
 
 
 
