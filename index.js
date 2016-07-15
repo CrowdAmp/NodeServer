@@ -421,11 +421,11 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
     sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
   }  
 }
-function sendStaggeredMessage(key, timeout) {
+function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
   console.log('key1: ' + key)
     var userId = key
     setTimeout(function() {
-    console.log("key " + userId)//forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+    forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
   }, timeout)
 }
 
@@ -440,9 +440,7 @@ function listenForMessageAll() {
           var timeout = 0
           for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
-            sendStaggeredMessage(key, timeout)
-            
-
+            sendStaggeredMessage(key, timeout, snapshot, influencerId)
           }
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
