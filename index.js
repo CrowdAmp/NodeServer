@@ -12,8 +12,7 @@ var twilioAuthToken = '035de675b2b6997806537a86ee70458e'
 var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var requests = require('request');
 var _ = require('underscore')
-var twilio2 = require('twilio');
-var resp = new twilio2.TwimlResponse();
+var twilioForTwiml = require('twilio');
 
 var app = express()
 
@@ -357,7 +356,7 @@ firebase.initializeApp({
 
 
 app.post('/twiliovoice', function(request,response) {
-  var resp = twilio.TwimlResponse();
+  var resp = new twilioForTwiml.TwimlResponse();
   resp.say('Please let us know if we can help during your development.', {
     voice:'woman',
     language:'en-gb'
