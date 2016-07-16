@@ -355,7 +355,7 @@ firebase.initializeApp({
 
 
 app.post('/twiliovoice', function(request,response) {
-  var resp = new twilio.TwimlResponse();
+  var resp = twilio.TwimlResponse();
   resp.say('Please let us know if we can help during your development.', {
     voice:'woman',
     language:'en-gb'
