@@ -356,11 +356,12 @@ firebase.initializeApp({
 
 
 app.post('/twiliovoice', function(request,response) {
-  var resp = new twilioForTwiml.TwimlResponse();
-  resp.say('Please let us know if we can help during your development.', {
-    voice:'woman',
-    language:'en-gb'
-});
+
+  var twiml = new twilio.TwimlResponse();
+      twiml.say('Hello World!');
+
+      response.writeHead(200, {'Content-Type': 'text/xml'});
+      response.end(twiml.toString());
 })
 
 app.listen(app.get('port'), function() {
