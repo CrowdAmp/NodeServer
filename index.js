@@ -358,7 +358,10 @@ firebase.initializeApp({
 app.post('/twiliovoice', function(request,response) {
 
   var twiml = new twilioForTwiml.TwimlResponse();
-      twiml.say('Hello World!');
+      resp.say('Hi, thank you for calling! This number only accepts messages. Please hang up and send a text', {
+      voice:'woman',
+      language:'en-gb'
+    });
 
       response.writeHead(200, {'Content-Type': 'text/xml'});
       response.end(twiml.toString());
