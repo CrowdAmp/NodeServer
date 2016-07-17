@@ -637,9 +637,9 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, "isUsingApp", false)
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
-            forwardMessageFromServerToUsers(phoneNumberToInfluencerIdDict[req.body.To], "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " , "text", "/IndividualMessageData/" +  req.body.From, req.body.From, '')
+            //forwardMessageFromServerToUsers(phoneNumberToInfluencerIdDict[req.body.To], "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " , "text", "/IndividualMessageData/" +  req.body.From, req.body.From, '')
 
-            //sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberFormatter(phoneNumberToSendFrom) + ". The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
+            sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberFormatter(phoneNumberToSendFrom) + ". The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
 // sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is " + influencerIdToNameDict[influencerId] + " again :)", "")
