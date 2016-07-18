@@ -458,7 +458,7 @@ function listenForMessageAll() {
           var timeout = 0
           for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
-            //sendStaggeredMessage(key, timeout, snapshot, influencerId)
+            sendStaggeredMessage(key, timeout, snapshot, influencerId)
           }
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
