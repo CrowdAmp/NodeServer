@@ -134,14 +134,16 @@ app.get('/', function(request, response) {
     response.send("hello world");
 });
 
+
+
+
+app.get('/twitterLogin/:userId', function(req, res) {
 var twitter = new Twitter({
         consumerKey: "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
         consumerSecret: "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj",
-        callback: "https://peaceful-mountain-72739.herokuapp.com/twitterCallback"
+        callback: "https://peaceful-mountain-72739.herokuapp.com/twitterCallback/" + req.params.userId
     });
 
-
-app.get('/twitterLogin', function(req, res) {
   twitter.getRequestToken(function(err, requestToken, requestSecret) {
       if (err)
           res.status(500).send(err);
@@ -153,10 +155,16 @@ app.get('/twitterLogin', function(req, res) {
 })
 
 app.get('/promptTwitterLogin/:influencerId/:message', function(req, res) {
+  for(var key in userContactInfoDict[influencerId]) {
+    timeout += 500
+    staggeredForwardMessageFromServerToUsers(timeout, req.params.influencerId, req.params.message + "/" + key, "text", req.params.influencerId + "/IndividualMessageData/", key, "")
+  }
+
   console.log("InfluencerId: " + req.params.influencerId + req.params.message)
+  res.sendStatus(200)
 })
 
-app.get('/twitterCallback', function(req, res) {
+app.get('/twitterCallback/:userId', function(req, res) {
   var requestToken = req.query.oauth_token,
       verifier = req.query.oauth_verifier;
 
@@ -209,6 +217,7 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var influencerId = request.body.influencerId
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
+  console.log("should send notification to " + influencerId + " with Key: " + pushNotificationDict[influencerId])
   sendPushNotification([pushNotificationDict[influencerId]], "Message from " + numberOfUsers + " fans: " + content)
   response.sendStatus(200)
 
@@ -484,8 +493,15 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
     sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
   }  
 }
+
+function staggeredForwardMessageFromServerToUsers(timeout, influencerId, content, type, firebasePath , userId, imageDownload) {
+  setTimeout(function() {
+    forwardMessageFromServerToUsers(influencerId, content, type, firebasePath, userId, "")
+  }, timeout)
+}
+
+
 function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
-  console.log('key1: ' + key)
     var userId = key
     setTimeout(function() {
     forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
@@ -607,6 +623,7 @@ function listenForPushIdUpdates() {
     var influencerId = snapshot.key
       pushNotificationDict[influencerId] = snapshot.child("pushId").val()
   })
+
 }
 
 function sendPushNotification(userIds, content) { 
@@ -789,14 +806,13 @@ function sendMessageThroughTwilio(to, from, text, media) {
   }
 
 }
-
+listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
-listenForPushIdUpdates()
 
 //sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
-sendPushNotification(["ec178ffe-5005-4a6b-bb62-80f4d640c515", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+sendPushNotification(["04593544-f3ea-4ca3-b73a-768755b0ad60", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
 
