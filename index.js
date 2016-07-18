@@ -13,8 +13,11 @@ var twilio = require('twilio')(twilioSID, twilioAuthToken)
 var requests = require('request');
 var _ = require('underscore')
 var twilioForTwiml = require('twilio');
+var Twitter = require("node-twitter-api")
 
 var app = express()
+
+
 
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
@@ -123,12 +126,49 @@ app.get('/test2', function(request, response) {
 
 
 
+
 app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
     response.send("hello world");
 });
+
+var twitter = new Twitter({
+        consumerKey: "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
+        consumerSecret: "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj",
+        callback: "https://peaceful-mountain-72739.herokuapp.com/twitterCallback"
+    });
+
+
+app.get('/twitterLogin', function(req, res) {
+  twitter.getRequestToken(function(err, requestToken, requestSecret) {
+      if (err)
+          res.status(500).send(err);
+      else {
+          _requestSecret = requestSecret;
+          res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + requestToken);
+      }
+  });
+})
+
+app.get('/twitterCallback', function(req, res) {
+  var requestToken = req.query.oauth_token,
+      verifier = req.query.oauth_verifier;
+
+      twitter.getAccessToken(requestToken, _requestSecret, verifier, function(err, accessToken, accessSecret) {
+          if (err)
+              res.status(500).send(err);
+          else
+              twitter.verifyCredentials(accessToken, accessSecret, function(err, user) {
+                  if (err)
+                      res.status(500).send(err);
+                  else
+                      res.send(user);
+              });
+      });
+  });
+
 
 app.get('/getTotalFans/:id', function(request, response) {
   response.send(influencerMetricsDict[request.params.id][0].toString())
