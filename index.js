@@ -152,6 +152,10 @@ app.get('/twitterLogin', function(req, res) {
   });
 })
 
+app.get('/promptTwitterLogin/:influencerId/:message', function(req, res) {
+  console.log("InfluencerId: " + req.params.influencerId + req.params.message)
+})
+
 app.get('/twitterCallback', function(req, res) {
   var requestToken = req.query.oauth_token,
       verifier = req.query.oauth_verifier;
