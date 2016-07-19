@@ -27,7 +27,8 @@ var influencerMetricsDict = {
   'crowdamptester' : [0,0,1],
   'electionfails' : [0,0,1],
   'morggkatherinee' : [0,0,1],
-  'kyleexum' : [0,0,1] //total fans, total messages
+  'kyleexum' : [0,0,1],
+  'belieberbot' : [0,0,1] //total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -36,7 +37,8 @@ var influencerIdToNameDict = {
   'crowdamptester': "CrowdAmp",
   'electionfails' : "Test Account",
   'morggkatherinee': "Morgan Katherine",
-  'kyleexum' : "Kyle Exum"
+  'kyleexum' : "Kyle Exum",
+  'belieberbot' : "Belieber Bot"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -97,7 +99,8 @@ var userContactInfoDict = {
   'crowdamptester': {},
   'electionfails' : {},
   'morggkatherinee': {},
-  'kyleexum' : {}
+  'kyleexum' : {},
+  'belieberbot' : {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
@@ -550,7 +553,11 @@ function listenForNewMessages() {
         userContactInfoDict[influencerId][snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
       }
 
+      try {
       influencerMetricsDict[influencerId][0] += 1 
+    } catch(err) {
+      console.log(err)
+    }
 
       var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
