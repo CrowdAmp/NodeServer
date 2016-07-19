@@ -184,6 +184,7 @@ app.get('/twitterCallback/:userId', function(req, res) {
 
 
 app.get('/getTotalFans/:id', function(request, response) {
+  console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
   response.send(influencerMetricsDict[request.params.id][0].toString())
 })
 
