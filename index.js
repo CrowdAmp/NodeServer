@@ -754,7 +754,7 @@ function phoneNumberFormatter(phoneNumber) {
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+12562026194') {
-    forwardMessageFromServerToUsers("jvrionis", "Hey! this is John", "text", "jvrionis/IndividualMessageData/", req.body.From, "") 
+    forwardMessageFromServerToUsers("jvrionis", "Hey! this is John asdf", "text", "jvrionis/IndividualMessageData/", req.body.From, "") 
 
 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
