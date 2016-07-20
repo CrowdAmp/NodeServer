@@ -28,7 +28,8 @@ var influencerMetricsDict = {
   'electionfails' : [0,0,1],
   'morggkatherinee' : [0,0,1],
   'kyleexum' : [0,0,1],
-  'belieberbot' : [0,0,1] //total fans, total messages
+  'belieberbot' : [0,0,1],
+  'jvrionis' : [0,0,1]//total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -38,7 +39,8 @@ var influencerIdToNameDict = {
   'electionfails' : "Test Account",
   'morggkatherinee': "Morgan Katherine",
   'kyleexum' : "Kyle Exum",
-  'belieberbot' : "Belieber Bot"
+  'belieberbot' : "Belieber Bot",
+  'jvrionis' : "John Vrionis"
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -84,7 +86,11 @@ var phoneNumberToInfluencerIdDict = {
   '+18603702198' : 'kyleexum',
   '+18603702136' : 'kyleexum',
   '+18603081572' : 'kyleexum',
-  '+18603081503' : 'kyleexum'
+  '+18603081503' : 'kyleexum',
+  '+12568134679' : 'jvrionis',
+  '+12562026082' : 'jvrionis'
+
+
 
 
 
@@ -100,7 +106,8 @@ var userContactInfoDict = {
   'electionfails' : {},
   'morggkatherinee': {},
   'kyleexum' : {},
-  'belieberbot' : {}
+  'belieberbot' : {},
+  'jvrionis' : {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
@@ -746,7 +753,9 @@ function phoneNumberFormatter(phoneNumber) {
 }
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
-  if (req.body.To == '+16506678787') {
+  if (req.body.to == '+12568134679') {
+
+  } else if (req.body.To == '+16506678787') {
     sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
 
     //setTimeout(function() {
