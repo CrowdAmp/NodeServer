@@ -759,7 +759,7 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
   } else if (req.body.To == '+16506678787') {
-    sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
+    forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "morggkatherinee/IndividualMessageData/", req.body.From, "") 
 
     //setTimeout(function() {
      // sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
@@ -770,7 +770,9 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
     //forwardMessageFromServerToUsers('electionfails', 'magnus', 'text', firebasePath, req.body.From, '')
 
   } else if (req.body.To == '+18608214181'){ 
-    sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! It's Kyle Exum. I'll try to respond to your messages when I can :)", "")
+    //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! It's Kyle Exum. I'll try to respond to your messages when I can :)", "")
+    forwardMessageFromServerToUsers("kyleexum", "Hey! It's Kyle Exum. I'll try to respond to your messages when I can :)", "text", "kyleexum/IndividualMessageData/", req.body.From, "") 
+
   } else if (false) {
 
     sendMessageThroughTwilio(req.body.From, req.body.To, "Hey B, thanks for messaging me this is ArianaBot <3", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSmeJSGr2yKOGUJF514n6isuRTjuvySdbyJD1lDKI0U3TMiAf-OHQ")
