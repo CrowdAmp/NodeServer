@@ -573,6 +573,8 @@ function listenForNewMessages() {
             sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
           }
 
+          console.log("USER CONTACT INFO: " + userContactInfo)
+
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
           }
