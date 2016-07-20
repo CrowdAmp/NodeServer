@@ -321,7 +321,7 @@ try {
 })
 
 function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
-  console.log("shouldForwardSnapshotToNLPDatabase " + snapshot)
+  console.log("shouldForwardSnapshotToNLPDatabase " + snapshot.child("text").val())
   reqUrl = serverUrl +  "didReceiveMessage"
 
   var snapshotContent = ""
