@@ -553,6 +553,11 @@ function listenForNewMessages() {
     firebase.database().ref(influencerId + '/IndividualMessageData').on('child_added', function(snapshot) {
       if (snapshot.child("isUsingApp").val() != null && snapshot.child("sendMessagesFrom").val() != null) { 
         userContactInfoDict[influencerId][snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
+      } 
+
+      if (snapshot.child("isUsingApp").val() == null && userContactInfoDict[influencerId][snapshot.key] == undefined && snapshot.key[0] != '+') {
+        console.log("ADDING USER FROM APP:: " + snapshot.key)
+        userContactInfoDict[influencerId][snapshot.key] = [true, "sendMessagesFromApp"]
       }
 
       influencerMetricsDict[influencerId][0] += 1 
@@ -572,8 +577,6 @@ function listenForNewMessages() {
             console.log(snapshot.child("mediaDownloadUrl").val())
             sendMessageThroughTwilio(snapshot.child("senderId").val(), userContactInfo[1], snapshot.child("text").val(), snapshot.child("mediaDownloadUrl").val())
           }
-
-          console.log("USER CONTACT INFO: " + userContactInfo)
 
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
