@@ -754,7 +754,7 @@ function phoneNumberFormatter(phoneNumber) {
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.to == '+12568134679') {
-
+    sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
   } else if (req.body.To == '+16506678787') {
     sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
 
