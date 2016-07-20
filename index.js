@@ -289,6 +289,8 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
 
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
+  } else {
+    sendPushNotification([pushNotificationDict[userId]], "JB bot just sent you a message!")
   }
 }
 
@@ -553,11 +555,8 @@ function listenForNewMessages() {
         userContactInfoDict[influencerId][snapshot.key] = [snapshot.child("isUsingApp").val(), snapshot.child("sendMessagesFrom").val()]
       }
 
-      try {
       influencerMetricsDict[influencerId][0] += 1 
-    } catch(err) {
-      console.log(err)
-    }
+ 
 
       var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
