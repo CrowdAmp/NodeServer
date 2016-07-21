@@ -642,7 +642,16 @@ function listenForPushIdUpdates() {
     var influencerId = snapshot.key
       pushNotificationDict[influencerId] = snapshot.child("pushId").val()
   })
+}
 
+function listenForTwitterDataUpdates() {
+  firebase.database().ref('/TwitterData').on('child_added', function(snapshot) {
+    var userId = snapshot.key
+    if (snapshot.child("hasRecorded").val() == null) {
+      addItemToFirebaseDatabase('/TwitterData/' + userId, "hasRecorded", true)
+      forwardMessageFromServerToUsers("belieberbot", "Hey! this is belieberbot", "text", "belieberbot/IndividualMessageData/", userId, "") 
+    }
+  })
 }
 
 function sendPushNotification(userIds, content) { 
@@ -754,7 +763,7 @@ function phoneNumberFormatter(phoneNumber) {
 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+12562026194') {
-    forwardMessageFromServerToUsers("jvrionis", "Hey! this is John asdf", "text", "jvrionis/IndividualMessageData/", req.body.From, "") 
+    forwardMessageFromServerToUsers("jvrionis", "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about cool deals I'm working on. Sound cool?", "text", "jvrionis/IndividualMessageData/", req.body.From, "") 
 
 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
@@ -832,6 +841,8 @@ function sendMessageThroughTwilio(to, from, text, media) {
   }
 
 }
+
+listenForTwitterDataUpdates() 
 listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
