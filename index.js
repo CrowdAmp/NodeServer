@@ -124,7 +124,7 @@ var test1 = 0
 app.get('/test1', function(request, response) {
   test1 += 1
   console.log("Test1 COUNT: " + test1)
-    response.redirect("https://www.youtube.com/watch?v=PrcdSszRtWo");
+    response.redirect("https://morgan-katherine-makeup.myshopify.com/products/personal-make-up-kit");
 });
 
 var test2 = 0
