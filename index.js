@@ -781,7 +781,7 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
   } else if (req.body.To == '+14155236304') {
-    forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Chantelle, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "ChantellePaige/IndividualMessageData/", req.body.From, "") 
+    forwardMessageFromServerToUsers("morggkatherinee", "Hey! This is Chantelle, thanks for messaging me. I'm so excited to chat! I'll try to get back to you asap!!! :D And guess what!?! I have some exciting new stuff going on, wanna hear about it? ;)", "text", "ChantellePaige/IndividualMessageData/", req.body.From, "") 
   } else if (req.body.To == '+16506678787') {
     forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "morggkatherinee/IndividualMessageData/", req.body.From, "") 
 
