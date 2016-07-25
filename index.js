@@ -29,7 +29,8 @@ var influencerMetricsDict = {
   'morggkatherinee' : [0,0,1],
   'kyleexum' : [0,0,1],
   'belieberbot' : [0,0,1],
-  'jvrionis' : [0,0,1]//total fans, total messages
+  'jvrionis' : [0,0,1],
+  'ChantellePaige' : [0,0,1]//total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -40,7 +41,8 @@ var influencerIdToNameDict = {
   'morggkatherinee': "Morgan Katherine",
   'kyleexum' : "Kyle Exum",
   'belieberbot' : "Belieber Bot",
-  'jvrionis' : "John Vrionis"
+  'jvrionis' : "John Vrionis",
+  'ChantellePaige' : 'Chantelle Paige'
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -88,7 +90,17 @@ var phoneNumberToInfluencerIdDict = {
   '+18603081572' : 'kyleexum',
   '+18603081503' : 'kyleexum',
   '+12568134679' : 'jvrionis',
-  '+12562026194' : 'jvrionis'
+  '+12562026194' : 'jvrionis',
+  '+14155236304' : 'ChantellePaige',
+  '+14155236421' : 'ChantellePaige',
+  '+14155236440' : 'ChantellePaige',
+  '+14155230073' : 'ChantellePaige',
+  '+14155236442' : 'ChantellePaige',
+  '+14155236425' : 'ChantellePaige',
+  '+14155236426' : 'ChantellePaige',
+  '+14155236438' : 'ChantellePaige',
+  '+14155236444' : 'ChantellePaige',
+  '+14155236301' : 'ChantellePaige'
 
 
 
@@ -107,7 +119,8 @@ var userContactInfoDict = {
   'morggkatherinee': {},
   'kyleexum' : {},
   'belieberbot' : {},
-  'jvrionis' : {}
+  'jvrionis' : {},
+  'ChantellePaige' : {}
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
@@ -767,6 +780,8 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
 
 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
+  } else if (req.body.To == '+14155236304') {
+    forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Chantelle, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "ChantellePaige/IndividualMessageData/", req.body.From, "") 
   } else if (req.body.To == '+16506678787') {
     forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "morggkatherinee/IndividualMessageData/", req.body.From, "") 
 
