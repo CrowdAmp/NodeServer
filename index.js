@@ -159,7 +159,7 @@ app.get('/', function(request, response) {
 
 
 
-
+var _requestSecret = undefined
 app.get('/twitterLogin/:userId', function(req, res) {
 var twitter = new Twitter({
         consumerKey: "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
