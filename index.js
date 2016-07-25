@@ -188,6 +188,12 @@ app.get('/promptTwitterLogin/:influencerId/:message', function(req, res) {
 })
 
 app.get('/twitterCallback/:userId', function(req, res) {
+  var twitter = new Twitter({
+        consumerKey: "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
+        consumerSecret: "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj",
+        callback: "https://peaceful-mountain-72739.herokuapp.com/twitterCallback/" + req.params.userId
+    });
+
   var requestToken = req.query.oauth_token,
       verifier = req.query.oauth_verifier;
 
