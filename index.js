@@ -208,7 +208,7 @@ app.get('/twitterCallback/:userId', function(req, res) {
                       console.log("Twitter access token: " + accessToken)
                       console.log("Twitter access secret: " + accessSecret)
                       addItemToFirebaseDatabase('TwitterData/electionfails' +  userId, "accessToken", accessToken)
-                      addItemToFirebaseDatabase('TwitterData/electionfails' +  iuserId, "accessSecret", accessSecret)
+                      addItemToFirebaseDatabase('TwitterData/electionfails' +  userId, "accessSecret", accessSecret)
 
 
                       res.send("Thank You!!!");
