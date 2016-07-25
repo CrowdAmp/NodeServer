@@ -280,9 +280,30 @@ app.get('/testPushNotifications', function(request, response) {
   response.sendStatus(200)
 })
 
-//!
-function reportNewUserToServer(infliencerId, userId) {
+//TODO report new users from app
+function reportNewUserToServer(influencerId, userId) {
+  reqUrl = serverUrl + "recordNewUser"
   console.log("reportingNewUserToServer")
+  try {
+    requests({
+      url: reqUrl,
+      method: "POST",
+      json: { 
+         userId : userId,
+         influencerId: influencerId
+       },
+    },function (error, response, body) {
+          if (!error) {
+            console.log("response: " + response.body.content)
+          } else {
+            console.log("error reporting new user: " + error)
+          }
+      });
+
+  } catch(err) {
+    console.log("Error with request: " + err)
+  }
+
 }
 
 
@@ -757,7 +778,7 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
             //forwardMessageFromServerToUsers(phoneNumberToInfluencerIdDict[req.body.To], "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " , "text", "/IndividualMessageData/" +  req.body.From, req.body.From, '')
-
+            reportNewUserToServer(phoneNumberToInfluencerIdDict[req.body.To], req.body.From)
             sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberFormatter(phoneNumberToSendFrom) + ". The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
