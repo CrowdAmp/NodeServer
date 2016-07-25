@@ -207,11 +207,11 @@ app.get('/twitterCallback/:userId', function(req, res) {
                   else
                       console.log("Twitter access token: " + accessToken)
                       console.log("Twitter access secret: " + accessSecret)
-                      addItemToFirebaseDatabase('TwitterData/electionfails' +  req.params.userId, "accessToken", accessToken)
-                      addItemToFirebaseDatabase('TwitterData/electionfails' +  req.params.userId, "accessSecret", accessSecret)
+                      addItemToFirebaseDatabase('TwitterData/electionfails/' +  req.params.userId, "accessToken", accessToken)
+                      addItemToFirebaseDatabase('TwitterData/electionfails/' +  req.params.userId, "accessSecret", accessSecret)
 
 
-                      res.send("Thank You!!!");
+                      res.send("Thank You B!!!");
               });
       });
   });
