@@ -206,6 +206,11 @@ app.get('/twitterCallback/:userId', function(req, res) {
                       res.status(500).send(err);
                   else
                       console.log("Twitter access token: " + accessToken)
+                      console.log("Twitter access secret: " + accessSecret)
+                      addItemToFirebaseDatabase('TwitterData/electionfails' +  userId, "accessToken", accessToken)
+                      addItemToFirebaseDatabase('TwitterData/electionfails' +  iuserId, "accessSecret", accessSecret)
+
+
                       res.send("Thank You!!!");
               });
       });
