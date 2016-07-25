@@ -206,7 +206,7 @@ app.get('/twitterCallback/:userId', function(req, res) {
                       res.status(500).send(err);
                   else
                       console.log("Twitter access token: " + accessToken)
-                      res.send(user);
+                      res.send("Thank You!!!");
               });
       });
   });
