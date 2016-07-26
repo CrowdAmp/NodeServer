@@ -260,13 +260,14 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
 })
 
 app.post('/shouldSendMessageToUsers', function(request, response) {
-  console.log("shouleSendMessageToUsers")
   var content = request.body.content
   console.log("CONTENT: " + content)
   var type = request.body.type
   var influencerId = request.body.influencerId
   var userIdList = request.body.userIdList
   var mediaDownloadUrl = request.body.mediaDownloadUrl
+  console.log("shouleSendMessageToUsers" + mediaDownloadUrl)
+
 
   for (var i = 0; i < userIdList.length; i++) {  
     console.log("sendingMesage to userId: " + userIdList[i])  
