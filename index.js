@@ -159,7 +159,6 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
-    registerNewUsers()
     response.send("hello world");
 });
 
@@ -611,7 +610,7 @@ function listenForMessageAll() {
   })
 }
 
-var shouldSendAwayMessage = false
+var shouldSendAwayMessage = falsec
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
     forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now, but text me in the morning and I'll get back to you ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
