@@ -608,8 +608,8 @@ function listenForMessageAll() {
 
 var shouldSendAwayMessage = true
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
-  if (shouldSendAwayMessage == true && influencerId = 'belieberbot') {
-    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now", "text", influencerId "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+  if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
+    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
   }
 }
 
