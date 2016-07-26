@@ -606,6 +606,14 @@ function listenForMessageAll() {
   })
 }
 
+var shouldSendAwayMessage = true
+function sendAwayMessageIfNecessary(snapshot, influencerId) {
+  if (shouldSendAwayMessage == true && influencerId = 'belieberbot') {
+    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now", "text", influencerId "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+  }
+}
+
+
 function listenForNewMessages() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
@@ -640,6 +648,7 @@ function listenForNewMessages() {
 
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
+            sendAwayMessageIfNecessary(snapshot, influencerId)
           }
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
@@ -919,5 +928,5 @@ listenForGroupedMessages()
 //sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
-sendPushNotification(["04593544-f3ea-4ca3-b73a-768755b0ad60", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+sendPushNotification(["4a9cee0f-2586-42bf-91bd-fd2b1e703ec9", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
 
