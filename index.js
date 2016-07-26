@@ -154,6 +154,7 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
+    registerNewUsers()
     response.send("hello world");
 });
 
@@ -696,7 +697,7 @@ function listenForPushIdUpdates() {
 }
 
 function listenForTwitterDataUpdates() {
-  firebase.database().ref('/TwitterData').on('child_added', function(snapshot) {
+  firebase.database().ref('belieberbot/TwitterData').on('child_added', function(snapshot) {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null) {
       addItemToFirebaseDatabase('/TwitterData/' + userId, "hasRecorded", true)
@@ -896,14 +897,17 @@ function sendMessageThroughTwilio(to, from, text, media) {
 }
 
 function registerNewUsers() {
-  for (influencer in userContactInfoDict) {
-    for (user in userContactInfoDict[influencer]) {
-      console.log(user)
+ // {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
+ console.log("registering new users")
+  for (var key in userContactInfoDict) {
+      console.log(userContactInfoDict[key])
+    for (var key in userContactInfoDict[key]) {
+      console.log("registering new users" + user)
+      console.log(userContactInfoDict[influencer[user]])
     }
   }
 }
 
-registerNewUsers()
 listenForTwitterDataUpdates() 
 listenForPushIdUpdates()
 listenForMessageAll()
