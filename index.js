@@ -700,7 +700,7 @@ function listenForTwitterDataUpdates() {
   firebase.database().ref('belieberbot/TwitterData').on('child_added', function(snapshot) {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null) {
-      addItemToFirebaseDatabase('/TwitterData/' + userId, "hasRecorded", true)
+      addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("belieberbot", "Hey! this is belieberbot", "text", "belieberbot/IndividualMessageData/", userId, "") 
     }
   })
