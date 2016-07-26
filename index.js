@@ -281,7 +281,7 @@ app.get('/testPushNotifications', function(request, response) {
 })
 
 //TODO report new users from app
-function reportNewUserToServer(influencerId, userId) {
+function reportNewUserToServer(influencerId, userId, device) {
   reqUrl = serverUrl + "recordNewUser"
   console.log("reportingNewUserToServer")
   try {
@@ -290,7 +290,8 @@ function reportNewUserToServer(influencerId, userId) {
       method: "POST",
       json: { 
          userId : userId,
-         influencerId: influencerId
+         influencerId: influencerId,
+         device: device
        },
     },function (error, response, body) {
           if (!error) {
@@ -778,7 +779,7 @@ app.post('/twiliowebhook/', function (req, res) {
             addItemToFirebaseDatabase(phoneNumberToInfluencerIdDict[req.body.To] + "/IndividualMessageData/" +  req.body.From, undefined, messageItemDict)
 
             //forwardMessageFromServerToUsers(phoneNumberToInfluencerIdDict[req.body.To], "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " , "text", "/IndividualMessageData/" +  req.body.From, req.body.From, '')
-            reportNewUserToServer(phoneNumberToInfluencerIdDict[req.body.To], req.body.From)
+            reportNewUserToServer(phoneNumberToInfluencerIdDict[req.body.To], req.body.From, "sms")
             sendMessageThroughTwilio(req.body.From, req.body.To, "You've reached " + influencerIdToNameDict[phoneNumberToInfluencerIdDict[req.body.To]]  + "! This is an automatic message to let you know know that you can text me directly at: " + phoneNumberFormatter(phoneNumberToSendFrom) + ". The purpose of this message is to filter any SPAM that I would otherwise recieve.", "")
             setTimeout(function() {
               sendIntroFlow(req, phoneNumberToSendFrom)
@@ -894,6 +895,15 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 }
 
+function registerNewUsers() {
+  for (influencer in userContactInfoDict) {
+    for (user in userContactInfoDict[influencer]) {
+      console.log(user)
+    }
+  }
+}
+
+registerNewUsers()
 listenForTwitterDataUpdates() 
 listenForPushIdUpdates()
 listenForMessageAll()
