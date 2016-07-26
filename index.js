@@ -140,6 +140,11 @@ app.get('/test1', function(request, response) {
     response.redirect("https://morgan-katherine-makeup.myshopify.com/products/personal-make-up-kit");
 });
 
+app.get('/changeAwayVariable', function(request, response) {
+  shouldSendAwayMessage = !shouldSendAwayMessage
+  response.send("The value of the away variable is " + shouldSendAwayMessage);
+});
+
 var test2 = 0
 app.get('/test2', function(request, response) {
   test2 += 1
@@ -606,10 +611,10 @@ function listenForMessageAll() {
   })
 }
 
-var shouldSendAwayMessage = true
+var shouldSendAwayMessage = false
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
-    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now, but text me in the morning and I'll get back to you ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
   }
 }
 
