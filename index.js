@@ -701,7 +701,7 @@ function listenForTwitterDataUpdates() {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null) {
       addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasRecorded", true)
-      forwardMessageFromServerToUsers("belieberbot", "Hey! this is belieberbot", "text", "belieberbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("belieberbot", "Hey!", "text", "belieberbot/IndividualMessageData/", userId, "") 
     }
   })
 }
