@@ -713,9 +713,11 @@ function listenForPushIdUpdates() {
 function listenForTwitterDataUpdates() {
   firebase.database().ref('belieberbot/TwitterData').on('child_added', function(snapshot) {
     var userId = snapshot.key
-    if (snapshot.child("hasRecorded").val() == null) {
+    if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
+      console.log("LISTENING FOR TWITTER UPDATES")
       addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("belieberbot", "Hey, it's JB bot. I talk like Justin Bieber and send you updates about him. Would you be down?", "text", "belieberbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "belieberbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("belieberbot", userId, "iOS")
     }
   })
