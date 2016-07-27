@@ -610,7 +610,7 @@ function listenForMessageAll() {
   })
 }
 
-var shouldSendAwayMessage = falsec
+var shouldSendAwayMessage = false
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
     forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now, but text me in the morning and I'll get back to you ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
@@ -715,7 +715,7 @@ function listenForTwitterDataUpdates() {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null) {
       addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasRecorded", true)
-      forwardMessageFromServerToUsers("belieberbot", "Hey! this is Bieber Bot, I'm really excited to talk to you! I am currently being prepared, and I willl be ready in a few hours :)", "text", "belieberbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("belieberbot", "Hey, it's JB bot. I talk like Justin Bieber and send you updates about him. Would you be down?", "text", "belieberbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("belieberbot", userId, "iOS")
     }
   })
