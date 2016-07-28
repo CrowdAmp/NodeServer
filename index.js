@@ -613,7 +613,7 @@ function listenForMessageAll() {
 var shouldSendAwayMessage = false
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
-    forwardMessageFromServerToUsers(influencerId, "Hey, I'm away rignt now, but text me in the morning and I'll get back to you ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+    forwardMessageFromServerToUsers(influencerId, "Hey, robots need sleep too! I'm away rignt now, but I'll get back to you as soon as I can ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
   }
 }
 
@@ -706,6 +706,10 @@ var onesignal_client = onesignal.createClient();
 function listenForPushIdUpdates() {
   firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
+      if ((snapshot.key.length) > 15) {
+        //console.log("WOULD SEND PUSH TO: " + snapshot.key)
+        sendPushNotification([snapshot.child("pushId").val()], "Belieber Bot just sent you a new message!")
+      }
       pushNotificationDict[influencerId] = snapshot.child("pushId").val()
   })
 }
