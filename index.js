@@ -231,7 +231,7 @@ app.get('/getTotalFans/:id', function(request, response) {
 })
 
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
-  var influencerId = request.params.influencerId
+  var influencerId = request.params.influencerid
   var userId = request.params.id
   var authStatus = request.params.status
 
@@ -240,7 +240,7 @@ app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(reques
   } else {
     authStatus = false 
   }
-  addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasAuthorization", false)
+  //addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasAuthorization", false)
 
   addItemToFirebaseDatabase(influencerId + "/TwitterData/" + userId, "hasAuthorization", authStatus)
   response.send("Changed Status of " + userId + " to " + authStatus + " " + influencerId)
