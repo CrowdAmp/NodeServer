@@ -240,8 +240,10 @@ app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(reques
   } else {
     authStatus = false 
   }
+  addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasAuthorization", false)
+
   addItemToFirebaseDatabase(influencerId + "/TwitterData/" + userId, "hasAuthorization", authStatus)
-  response.send("Changed Status of " + userId + " to " + authStatus)
+  response.send("Changed Status of " + userId + " to " + authStatus + " " + influencerId)
 })
 
 app.get('/getTotalMessages/:id', function(request, response) {
