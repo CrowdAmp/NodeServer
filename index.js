@@ -14,6 +14,9 @@ var requests = require('request');
 var _ = require('underscore')
 var twilioForTwiml = require('twilio');
 var Twitter = require("node-twitter-api")
+var oauth = require('oauth')
+var sha = require('./sha1.js');
+
 
 var app = express()
 
@@ -225,6 +228,20 @@ app.get('/twitterCallback/:userId', function(req, res) {
 app.get('/getTotalFans/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
   response.send(influencerMetricsDict[request.params.id][0].toString())
+})
+
+app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
+  var influencerId = request.params.influencerId
+  var userId = request.params.id
+  var authStatus = request.params.status
+
+  if (authStatus == 'true') {
+    authStatus = true
+  } else {
+    authStatus = false 
+  }
+  addItemToFirebaseDatabase(influencerId + "/TwitterData/" + userId, "hasAuthorization", authStatus)
+  response.send("Changed Status of " + userId + " to " + authStatus)
 })
 
 app.get('/getTotalMessages/:id', function(request, response) {
@@ -558,7 +575,7 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
     }
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
   addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
-
+//TODO: add notificaiton
   if (!userContactInfoDict[influencerId][userId][0]) {
     sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
   }  
@@ -706,9 +723,9 @@ var onesignal_client = onesignal.createClient();
 function listenForPushIdUpdates() {
   firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
-      if ((snapshot.key.length) > 15) {
+      if (false && snapshot.key != 'kyleexum' && snapshot.key != 'morggkatherinee' && snapshot.key != 'ChantellePaige') {
         //console.log("WOULD SEND PUSH TO: " + snapshot.key)
-        sendPushNotification([snapshot.child("pushId").val()], "Belieber Bot just sent you a new message!")
+        //sendPushNotification([snapshot.child("pushId").val()], "Belieber Bot just sent you a new message!")
       }
       pushNotificationDict[influencerId] = snapshot.child("pushId").val()
   })
@@ -929,6 +946,62 @@ function registerNewUsers() {
   }
 }
 
+function sendTweet(screenName, userToken, userSecret, content, containsMedia, mediaFileName) {
+
+var a = new oauth.OAuth("https://twitter.com/oauth/request_token",
+  "https://twitter.com/oauth/access_token",
+  "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
+  "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj",
+  "1.0",
+  "asdf",
+  "HMAC-SHA1");
+
+if (containsMedia) {
+  a.post("https://upload.twitter.com/1.1/media/upload.json", userToken, userSecret, {media:fs.readFileSync(mediaFileName).toString("base64")} ,"" , function (e, data, res){
+      if (e) {
+          console.error(e);
+      } else {
+          try{
+              data = JSON.parse(data);
+          }catch (e){
+              console.error("Error Json : " + e);
+          }
+          console.log(data.media_id);
+
+          a.post("https://api.twitter.com/1.1/statuses/update.json", userToken, userSecret, {status:content, media_ids:[data.media_id_string]}, "", function (e, data, response){
+              if (e) {
+                console.error("Error for " + screenName + ": " + e);
+              }else {
+                console.log("Tweeted for " + screenName)
+              }
+            })
+        }
+
+    })
+  } else {
+    a.post("https://api.twitter.com/1.1/statuses/update.json", userToken, userSecret, {status:content}, "", function (e, data, response){
+        if (e) {
+          console.error("Error for " + screenName + ": " + e);
+        } else {
+          console.log("Tweeted for " + screenName)
+      }
+    })
+  }
+}
+
+function tweetAll(message, containsFile, fileName) {
+  firebase.database().ref("/belieberbot/TwitterData").once('value', function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      if (childSnapshot.child("hasAuthorization").val()) {
+        sendTweet(childSnapshot.key, childSnapshot.child("token").val(), childSnapshot.child("secret").val(), "YAAAAAY", false, "")
+        console.log("Sending tweet for: " + childSnapshot.key) 
+      }
+    })
+  })
+}
+
+//tweetAll("",false,"")
+//sendTweet("3396657973-zFFpo1XnkpZF9irlbJGE61WrbryQ8Mi8vJfRNH9","uXI1HaGzzUWWzRuNf4FCblcxzB5fpdW1I01ZoDK0y0hCW", "Heyyyyyy!", true, "./twittergif.gif")
 listenForTwitterDataUpdates() 
 listenForPushIdUpdates()
 listenForMessageAll()
@@ -938,5 +1011,44 @@ listenForGroupedMessages()
 //sendTestRequest()
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
-sendPushNotification(["4a9cee0f-2586-42bf-91bd-fd2b1e703ec9", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+//sendPushNotification(["4a9cee0f-2586-42bf-91bd-fd2b1e703ec9", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+
+
+  /*
+  url = "https://upload.twitter.com/1.1/media/upload.json"
+  var consumerSecret = "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj"
+  var oauth_consumer_key = "BF2zgayzrJs0Ee6BYmHeX1ZkZ"
+  //User specific
+  var tokenSecret = "uXI1HaGzzUWWzRuNf4FCblcxzB5fpdW1I01ZoDK0y0hCW"
+  var oauth_token = "3396657973-zFFpo1XnkpZF9irlbJGE61WrbryQ8Mi8vJfRNH9"
+  var oauth_params = {
+        consumer_key: oauth_consumer_key,
+        consumer_secret: consumerSecret,
+        token: oauth_token,
+        token_secret: tokenSecret
+      };
+
+  var a = requests.post({url:url, oauth:oauth_params, media:fs.readFileSync('./twittergif.gif').toString("base64")} ,"" , function (e, data, res){
+      if (e) {
+          console.error(e);
+      }else {
+          try{
+              console.log(res)
+              data = JSON.parse(data);
+          }catch (e){
+              console.error("Error Json : " + e);
+          }
+          console.log(data.media_id);
+
+          // a.post("https://api.twitter.com/1.1/statuses/update.json", oauth_access_token, oauth_access_token_secret, {status:message,media_ids:[data.media_id_string]}, "", function (e, data, res){
+          //     if (e) {
+          //         console.error(e);
+          //     }else {
+          //         console.log("Success");
+          //     }
+          // });
+      }
+  });*/
+
+
 

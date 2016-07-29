@@ -22,7 +22,8 @@
     "request": "^2.72.0",
     "underscore": "^1.8.3",
     "node-twitter-api": "^1.7.4",
-    "bluebird" : "^3.4.1" 
+    "bluebird" : "^3.4.1",
+    "oauth" : "^0.9.14" 
   },
   "engines": {
     "node": "4.0.0"
