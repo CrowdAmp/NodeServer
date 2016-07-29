@@ -577,7 +577,6 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
     }
   addItemToFirebaseDatabase(firebasePath +  userId, undefined, messageItemDict)
   addItemToFirebaseDatabase(firebasePath +  userId, "userDidRead", false)
-//TODO: add notificaiton
   if (!userContactInfoDict[influencerId][userId][0]) {
     sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], snapshot.child('text').val(), snapshot.child("mediaDownloadUrl").val())
   }  
@@ -594,6 +593,7 @@ function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
     var userId = key
     setTimeout(function() {
     forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
+    sendPushNotification([pushNotificationDict[userId]], "JB Bot just sent you a message!")
   }, timeout)
 }
 
