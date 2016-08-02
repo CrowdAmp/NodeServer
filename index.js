@@ -33,7 +33,9 @@ var influencerMetricsDict = {
   'kyleexum' : [0,0,1],
   'belieberbot' : [0,0,1],
   'jvrionis' : [0,0,1],
-  'ChantellePaige' : [0,0,1]//total fans, total messages
+  'ChantellePaige' : [0,0,1],
+  'indibot' : [0,0,1],
+  'trumpbot' : [0,0,1]//total fans, total messages
 }
 
 var influencerIdToNameDict = { 
@@ -45,7 +47,9 @@ var influencerIdToNameDict = {
   'kyleexum' : "Kyle Exum",
   'belieberbot' : "Belieber Bot",
   'jvrionis' : "John Vrionis",
-  'ChantellePaige' : 'Chantelle Paige'
+  'ChantellePaige' : 'Chantelle Paige',
+  'indibot' : "Indi the Fitness Bot",
+  'trumpbot' : 'Trump Bot'
 }
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
@@ -123,7 +127,10 @@ var userContactInfoDict = {
   'kyleexum' : {},
   'belieberbot' : {},
   'jvrionis' : {},
-  'ChantellePaige' : {}
+  'ChantellePaige' : {},
+  'indibot' : {},
+  'trumpbot' : {}
+
 }
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
@@ -733,12 +740,12 @@ function listenForPushIdUpdates() {
   })
 }
 
-function listenForTwitterDataUpdates() {
-  firebase.database().ref('belieberbot/TwitterData').on('child_added', function(snapshot) {
+function listenForNewUserUpdates(platform) {
+  firebase.database().ref('belieberbot/' + platform).on('child_added', function(snapshot) {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
-      console.log("LISTENING FOR TWITTER UPDATES")
-      addItemToFirebaseDatabase('belieberbot/TwitterData/' + userId, "hasRecorded", true)
+      console.log("LISTENING FOR New user UPDATES")
+      addItemToFirebaseDatabase('belieberbot/' + platform + '/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("belieberbot", "Hey, it's JB bot. I talk like Justin Bieber and send you updates about him. Would you be down?", "text", "belieberbot/IndividualMessageData/", userId, "") 
       forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "belieberbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("belieberbot", userId, "iOS")
@@ -994,8 +1001,9 @@ if (containsMedia) {
 function tweetAll(message, containsFile, fileName) {
   firebase.database().ref("/belieberbot/TwitterData").once('value', function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
+      //console.log(childSnapshot.key)
       if (childSnapshot.child("hasAuthorization").val()) {
-        sendTweet(childSnapshot.key, childSnapshot.child("token").val(), childSnapshot.child("secret").val(), "YAAAAAY", false, "")
+        sendTweet(childSnapshot.key, childSnapshot.child("token").val(), childSnapshot.child("secret").val(), "LOL Bieber Bot made me laugh 😂 What would you ask him? tinyurl.com/BieberBotApp", true, "./bieberMarryGifFinal.gif")
         console.log("Sending tweet for: " + childSnapshot.key) 
       }
     })
@@ -1004,7 +1012,8 @@ function tweetAll(message, containsFile, fileName) {
 
 //tweetAll("",false,"")
 //sendTweet("3396657973-zFFpo1XnkpZF9irlbJGE61WrbryQ8Mi8vJfRNH9","uXI1HaGzzUWWzRuNf4FCblcxzB5fpdW1I01ZoDK0y0hCW", "Heyyyyyy!", true, "./twittergif.gif")
-listenForTwitterDataUpdates() 
+listenForNewUserUpdates("TwitterData")
+listenForNewUserUpdates("FacebookData")  
 listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
