@@ -1018,8 +1018,25 @@ listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
-
+spanmArnav()
 //sendTestRequest()
+
+
+function staggeredSpam(timeout, key) {
+  setTimeout(function() {
+    sendMessageThroughTwilio('+16507969353', key, "Never tag me on facebook again you Bitch", "")  
+  }, timeout)
+}
+
+
+function spanmArnav() {
+  var timeout = 0
+  for (key in phoneNumberToInfluencerIdDict) {
+    console.log(key)
+    staggeredSpam(timeout, key)
+    timeout += 10000
+  }
+}
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
 //sendPushNotification(["4a9cee0f-2586-42bf-91bd-fd2b1e703ec9", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
