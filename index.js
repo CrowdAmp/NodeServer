@@ -385,7 +385,7 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
   } else {
-    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]], getPushNotificationMessage(userId))
+    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[userId][1]], getPushNotificationMessage(userId))
   }
 }
 
