@@ -759,7 +759,20 @@ function listenForNewUserUpdates(platform) {
       addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
       forwardMessageFromServerToUsers("trumpbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "trumpbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("trumpbot", "If at any time you want to Tweet or share a screenshot of this conversation on Facebook, simply reply SHARE", "text", "trumpbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("trumpbot", userId, "iOS")
+    }
+  })
+
+    firebase.database().ref('indibot/' + platform).on('child_added', function(snapshot) {
+    var userId = snapshot.key
+    if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
+      console.log("LISTENING FOR New user UPDATES")
+      addItemToFirebaseDatabase('indibot/' + platform + '/' + userId, "hasRecorded", true)
+      forwardMessageFromServerToUsers("indibot", "Hi I am Indi Bot I will be your fitness companion!", "text", "indibot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("indibot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "indibot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("indibot", "If at any time you want to Tweet or share a screenshot of this conversation on Facebook, simply reply SHARE", "text", "indibot/IndividualMessageData/", userId, "") 
+      reportNewUserToServer("indibot", userId, "iOS")
     }
   })
 }
