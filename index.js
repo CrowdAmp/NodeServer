@@ -696,8 +696,8 @@ function listenForNewMessages() {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
             sendAwayMessageIfNecessary(snapshot, influencerId)
             if(influencerId == "trumpbot") {
-              sendMessageThroughTwilio("+13108670121", "+19804304321", "Trumpbot just received a message, get on you ass and reply!", "")
-              sendMessageThroughTwilio("+15034966700", "+19804304321", "Trumpbot just received a message, get on you ass and reply!", "")
+              sendMessageThroughTwilio("+13108670121", "+19804304321", "Trumpbot just received a message, get off you ass and reply!", "")
+              sendMessageThroughTwilio("+15034966700", "+19804304321", "Trumpbot just received a message, get off you ass and reply!", "")
 
             }
           }
