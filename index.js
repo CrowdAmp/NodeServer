@@ -759,7 +759,7 @@ function listenForNewUserUpdates(platform) {
 
   firebase.database().ref('trumpbot/' + platform).on('child_added', function(snapshot) {
     var userId = snapshot.key
-    if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == true) {
+    if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
       console.log("LISTENING FOR New user UPDATES")
       addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", "shouldBeTrue")
       forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
@@ -1068,7 +1068,7 @@ function spanmArnav() {
 }
 
 //sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
-//sendPushNotification(["4a9cee0f-2586-42bf-91bd-fd2b1e703ec9", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+//sendPushNotification(["1281818c-705b-4c7c-ac4c-4c6a951af928"], "Notification from Online!")
 
 
   /*
