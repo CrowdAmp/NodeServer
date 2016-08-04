@@ -763,8 +763,10 @@ function listenForPushIdUpdates() {
 
 function listenForPushIdUpdates2() {
   firebase.database().ref('/PushIds2').on('child_added', function(snapshot) {
+    console.log("ADDING pushid1" + snapshot.key)
     var influencerId = snapshot.key
-    firebase.database().ref('/PushIds/' + influencerId).on('child_added', function(snapshot) {
+    firebase.database().ref('/PushIds2/' + influencerId).on('child_added', function(snapshot) {
+      console.log("ADDING pushid2")
       pushNotificationDict[snapshot.key] = [snapshot.child("pushId").val(), snapshot.child("onesignalToken").val(), snapshot.child("influencer").val()]
     })
   })
