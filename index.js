@@ -237,6 +237,11 @@ app.get('/getTotalFans/:id', function(request, response) {
   response.send(influencerMetricsDict[request.params.id][0].toString())
 })
 
+app.get('/didShare/:id', function(request, response) {
+  console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
+  response.send(0)
+})
+
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
   var influencerId = request.params.influencerid
   var userId = request.params.id
