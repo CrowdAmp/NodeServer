@@ -239,7 +239,7 @@ app.get('/getTotalFans/:id', function(request, response) {
 
 app.get('/didShare/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
-  response.send(0)
+  response.send("0")
 })
 
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
