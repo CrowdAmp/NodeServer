@@ -751,6 +751,17 @@ function listenForNewUserUpdates(platform) {
       reportNewUserToServer("belieberbot", userId, "iOS")
     }
   })
+
+  firebase.database().ref('trumpbot/' + platform).on('child_added', function(snapshot) {
+    var userId = snapshot.key
+    if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
+      console.log("LISTENING FOR New user UPDATES")
+      addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
+      forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("trumpbot", "It might take me a few minutes to reply, but I will definitely get back to you! Would you mind turning on push notifications so that you get my messages?", "text", "trumpbot/IndividualMessageData/", userId, "") 
+      reportNewUserToServer("trumpbot", userId, "iOS")
+    }
+  })
 }
 
 function sendPushNotification(userIds, content) { 
@@ -1018,7 +1029,7 @@ listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
-spanmArnav()
+//spanmArnav()
 //sendTestRequest()
 
 
