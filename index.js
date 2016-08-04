@@ -385,7 +385,18 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
   } else {
-    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]],"JB bot just sent you a message!")
+    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]], getPushNotificationMessage(userId))
+  }
+}
+
+function getPushNotificationMessage(userId) {
+  influencerId = pushNotificationDict[userId][2]
+  if (influencerId == 'belieberbot') {
+    return "You have a new message from JB"
+  } else if (influencerId = 'trumpbot') {
+    return "You have a new message from Donald Trump 😉"
+  } else {
+    return "You just received a new message!"
   }
 }
 
@@ -605,7 +616,7 @@ function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
     var userId = key
     setTimeout(function() {
     forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
-    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]] ,"JB Bot just sent you a message!")
+    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]] ,getPushNotificationMessage(userId))
   }, timeout)
 }
 
