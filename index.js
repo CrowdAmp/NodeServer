@@ -703,6 +703,10 @@ function listenForNewMessages() {
             influencerMetricsDict[influencerId][1] += 1 
           }
 
+          if(influencerId == "trumpbot") {
+            sendMessageThroughTwilio("+13108670121", "+19804304321", "Trumpbot just received a message, get on you ass and reply!", "")
+          }
+
   		})
     });
   })
