@@ -392,7 +392,7 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
 function getPushNotificationMessage(userId) {
   influencerId = pushNotificationDict[userId][2]
   if (influencerId == 'belieberbot') {
-    return "You have a new message from JB"
+    return "You have a new message from JB!"
   } else if (influencerId = 'trumpbot') {
     return "You have a new message from Donald Trump 😉"
   } else {
