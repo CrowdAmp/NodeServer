@@ -747,7 +747,7 @@ function listenForNewUserUpdates(platform) {
       console.log("LISTENING FOR New user UPDATES")
       addItemToFirebaseDatabase('belieberbot/' + platform + '/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("belieberbot", "Hey, it's JB bot. I talk like Justin Bieber and send you updates about him. Would you be down?", "text", "belieberbot/IndividualMessageData/", userId, "") 
-      forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "belieberbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you! Would you mind turning on push notifications so that you get my messages?", "text", "belieberbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("belieberbot", userId, "iOS")
     }
   })
@@ -758,7 +758,7 @@ function listenForNewUserUpdates(platform) {
       console.log("LISTENING FOR New user UPDATES")
       addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
       forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
-      forwardMessageFromServerToUsers("trumpbot", "It might take me a few minutes to reply, but I will definitely get back to you! Would you mind turning on push notifications so that you get my messages?", "text", "trumpbot/IndividualMessageData/", userId, "") 
+      forwardMessageFromServerToUsers("trumpbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "trumpbot/IndividualMessageData/", userId, "") 
       reportNewUserToServer("trumpbot", userId, "iOS")
     }
   })
