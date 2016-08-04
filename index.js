@@ -289,7 +289,7 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
   console.log("should send notification to " + influencerId + " with Key: " + pushNotificationDict[influencerId])
-  sendPushNotification([pushNotificationDict[influencerId]], "Message from " + numberOfUsers + " fans: " + content)
+  sendPushNotification([pushNotificationDict[influencerId][0]], [pushNotificationDict[influencerId][1]],"Message from " + numberOfUsers + " fans: " + content)
   response.sendStatus(200)
 
 })
@@ -385,7 +385,7 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
   } else {
-    sendPushNotification([pushNotificationDict[userId]], "JB bot just sent you a message!")
+    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]],"JB bot just sent you a message!")
   }
 }
 
@@ -605,7 +605,7 @@ function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
     var userId = key
     setTimeout(function() {
     forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
-    sendPushNotification([pushNotificationDict[userId]], "JB Bot just sent you a message!")
+    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]] ,"JB Bot just sent you a message!")
   }, timeout)
 }
 
@@ -737,13 +737,40 @@ var onesignal_client = onesignal.createClient();
 function listenForPushIdUpdates() {
   firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
-      if (false && snapshot.key != 'kyleexum' && snapshot.key != 'morggkatherinee' && snapshot.key != 'ChantellePaige') {
+     var pushIdDict = {}
+     var refPath
+      if (snapshot.key == 'kyleexum' || snapshot.key == 'morggkatherinee' || snapshot.key == 'ChantellePaige') {
+        pushIdDict = {
+          "pushId" : snapshot.child("pushId").val(),
+          "onesignalToken" : "3fe58d49-2025-4653-912f-8067adbecd7f",
+          "influencer" : "crowdamp",
+        }
+        refPath = "/PushIds2/CROWDAMP"
         //console.log("WOULD SEND PUSH TO: " + snapshot.key)
         //sendPushNotification([snapshot.child("pushId").val()], "Belieber Bot just sent you a new message!")
+      } else {
+        pushIdDict = {
+          "pushId" : snapshot.child("pushId").val(),
+          "onesignalToken" : "3fe58d49-2025-4653-912f-8067adbecd7f",
+          "influencer" : "belieberbot",
+        }
+        refPath = "/PushIds2/BELIEBERBOT"
+
       }
-      pushNotificationDict[influencerId] = snapshot.child("pushId").val()
+      addItemToFirebaseDatabase(refPath, snapshot.key, pushIdDict)
   })
 }
+
+function listenForPushIdUpdates2() {
+  firebase.database().ref('/PushIds2').on('child_added', function(snapshot) {
+    var influencerId = snapshot.key
+    firebase.database().ref('/PushIds/' + influencerId).on('child_added', function(snapshot) {
+      pushNotificationDict[snapshot.key] = [snapshot.child("pushId").val(), snapshot.child("onesignalToken").val(), snapshot.child("influencer").val()]
+    })
+  })
+}
+
+
 
 function listenForNewUserUpdates(platform) {
   firebase.database().ref('belieberbot/' + platform).on('child_added', function(snapshot) {
@@ -782,10 +809,13 @@ function listenForNewUserUpdates(platform) {
   })
 }
 
-function sendPushNotification(userIds, content) { 
+function sendPushNotification(userIds, app_id,content) { 
   var restApiKey = 'N2Y2MWU1MDMtOTk3Zi00MDkzLWI3NjEtYTU0N2UwYjFjMGRh';
+  if (app_id == undefined) {
+    app_id = '3fe58d49-2025-4653-912f-8067adbecd7f'
+  }
   var params = {
-    app_id: '3fe58d49-2025-4653-912f-8067adbecd7f',
+    app_id: app_id,
     contents: {
       'en': content
     },
@@ -1047,6 +1077,7 @@ listenForPushIdUpdates()
 listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
+listenForPushIdUpdates2() 
 //spanmArnav()
 //sendTestRequest()
 
