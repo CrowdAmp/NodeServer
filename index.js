@@ -814,12 +814,12 @@ function listenForNewUserUpdates(platform) {
 function sendPushNotification(userIds, app_id,content) { 
   var restApiKey = 'N2Y2MWU1MDMtOTk3Zi00MDkzLWI3NjEtYTU0N2UwYjFjMGRh';
   if (app_id == undefined) {
-    app_id = '3fe58d49-2025-4653-912f-8067adbecd7f'
+    app_id = ['3fe58d49-2025-4653-912f-8067adbecd7f']
   }
     console.log("SHOULD SEND PUSH NOTIFICATION", userIds, app_id, content)
 
   var params = {
-    app_id: app_id,
+    app_id: app_id[0],
     contents: {
       'en': content
     },
