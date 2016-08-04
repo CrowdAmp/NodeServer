@@ -697,12 +697,13 @@ function listenForNewMessages() {
             sendAwayMessageIfNecessary(snapshot, influencerId)
             if(influencerId == "trumpbot") {
               sendMessageThroughTwilio("+13108670121", "+19804304321", "Trumpbot just received a message, get off you ass and reply!", "")
-              sendMessageThroughTwilio("+15034966700", "+19804304321", "Trumpbot just received a message, get off you ass and reply!", "")
-
+              //sendMessageThroughTwilio("+15034966700", "+19804304321", "Trumpbot just received a message, get off you ass and reply!", "")
             }
           }
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
+            sendPushNotification([pushNotificationDict[snapshot.child("senderId").val()][0]], [pushNotificationDict[snapshot.child("senderId").val()][1]],"Message from " + numberOfUsers + " fans: " + content)
+ 
           }
           if (snapshot.child('text').val() != null) {
             influencerMetricsDict[influencerId][1] += 1 
