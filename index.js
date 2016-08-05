@@ -702,8 +702,9 @@ function listenForNewMessages() {
           }
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
             addItemToFirebaseDatabase('/' + influencerId + '/IndividualMessageData/' + snapshot.child("senderId").val() + "/" + snapshot.key, "hasBeenForwarded", true)
-            sendPushNotification([pushNotificationDict[snapshot.child("senderId").val()][0]], [pushNotificationDict[snapshot.child("senderId").val()][1]], getPushNotificationMessage(snapshot.child("senderId").val()))
- 
+            if (pushNotificationDict[snapshot.child("senderId").val()] != undefined) {
+              sendPushNotification([pushNotificationDict[snapshot.child("senderId").val()][0]], [pushNotificationDict[snapshot.child("senderId").val()][1]], getPushNotificationMessage(snapshot.child("senderId").val()))
+            } 
           }
           if (snapshot.child('text').val() != null) {
             influencerMetricsDict[influencerId][1] += 1 
