@@ -289,7 +289,9 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   var phraseId = request.body.phraseId 
   sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId)
   console.log("should send notification to " + influencerId + " with Key: " + pushNotificationDict[influencerId])
-  sendPushNotification([pushNotificationDict[influencerId][0]], [pushNotificationDict[influencerId][1]],"Message from " + numberOfUsers + " fans: " + content)
+  if (pushNotificationDict[influencerId] != undefined) {
+    sendPushNotification([pushNotificationDict[influencerId][0]], [pushNotificationDict[influencerId][1]],"Message from " + numberOfUsers + " fans: " + content)
+  }
   response.sendStatus(200)
 
 })
@@ -385,7 +387,9 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
       sendMessageThroughTwilio(userId, userContactInfoDict[influencerId][userId][1], "", mediaDownloadUrl)
     }
   } else {
-    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[userId][1]], getPushNotificationMessage(userId))
+    if (pushNotificationDict[userId] != undefined) {
+      sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[userId][1]], getPushNotificationMessage(userId))
+    }
   }
 }
 
@@ -616,7 +620,9 @@ function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
     var userId = key
     setTimeout(function() {
     forwardFirebaseSnapshotToUsers(snapshot,'/' + influencerId +"/IndividualMessageData/", key, influencerId)
-    sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]] ,getPushNotificationMessage(userId))
+    if (pushNotificationDict[userId] != undefined) {
+      sendPushNotification([pushNotificationDict[userId][0]], [pushNotificationDict[influencerId][1]] ,getPushNotificationMessage(userId))
+    }
   }, timeout)
 }
 
