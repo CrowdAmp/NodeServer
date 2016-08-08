@@ -826,7 +826,6 @@ function listenForNewUserUpdates(platform) {
           addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
           forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
           forwardMessageFromServerToUsers("trumpbot", "It might take me a few minutes to reply, but I will definitely get back to you!", "text", "trumpbot/IndividualMessageData/", userId, "") 
-          forwardMessageFromServerToUsers("trumpbot", "If at any time you want to Tweet or share a screenshot of this conversation on Facebook, simply reply SHARE", "text", "trumpbot/IndividualMessageData/", userId, "") 
           reportNewUserToServer("trumpbot", userId, "iOS")
         }
       })
