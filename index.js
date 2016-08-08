@@ -239,7 +239,7 @@ app.get('/getTotalFans/:id', function(request, response) {
 
 app.get('/didShare/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
-  response.send("0")
+  response.send("1")
 })
 
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
@@ -803,7 +803,7 @@ function listenForNewUserUpdates(platform) {
     var userId = snapshot.key
     if (snapshot.child("hasRecorded").val() == null || snapshot.child("hasRecorded").val() == false) {
        firebase.database().ref('belieberbot/IndividualMessageData/' + userId).once("value", function(snapshot) {
-        console.log("NUM Children: for belieberbot" + snapshot.numChildren())
+        console.log("NUM Children: for trumpbot" + snapshot.numChildren())
         if (snapshot.numChildren() < 5) {
           console.log("LISTENING FOR New user UPDATES")
           addItemToFirebaseDatabase('belieberbot/' + platform + '/' + userId, "hasRecorded", true)
