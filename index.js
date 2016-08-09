@@ -686,7 +686,7 @@ function listenForNewMessages() {
       var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
   		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-  			//sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
+  			 //sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
       		console.log("LISTENING FOR MESSAGE: " + snapshot.child("text").val())
           console.log("senderId: " + snapshot.child("senderId").val())
 
