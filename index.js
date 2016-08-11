@@ -236,10 +236,10 @@ app.get('/getTotalFans/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
   response.send(influencerMetricsDict[request.params.id][0].toString())
 })
-
+ 
 app.get('/didShare/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
-  response.send("0")
+  response.send("20")
 })
 
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
@@ -808,7 +808,7 @@ function listenForNewUserUpdates(platform) {
           console.log("LISTENING FOR New user UPDATES")
           addItemToFirebaseDatabase('belieberbot/' + platform + '/' + userId, "hasRecorded", true)
           forwardMessageFromServerToUsers("belieberbot", "Hey, it's JB bot. I talk like Justin Bieber and send you updates about him. Would you be down?", "text", "belieberbot/IndividualMessageData/", userId, "") 
-          forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you! Would you mind turning on push notifications so that you get my messages?", "text", "belieberbot/IndividualMessageData/", userId, "") 
+          forwardMessageFromServerToUsers("belieberbot", "It might take me a few minutes to reply, but I will definitely get back to you! Turn on push notifications so that you get my messages?", "text", "belieberbot/IndividualMessageData/", userId, "") 
           reportNewUserToServer("belieberbot", userId, "iOS")
         }
       })
@@ -825,7 +825,7 @@ function listenForNewUserUpdates(platform) {
           console.log("LISTENING FOR New user UPDATES")
           addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
           forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
-          forwardMessageFromServerToUsers("trumpbot", "I'm very busy, so it might take me a while to reply but I will definitely get back to you. Would you mind turning on push notifications so you know when you received my message?", "text", "trumpbot/IndividualMessageData/", userId, "") 
+          forwardMessageFromServerToUsers("trumpbot", "I'm very busy, so it might take me a while to reply but I will definitely get back to you. Turn on push notifications so you know when you received my message?", "text", "trumpbot/IndividualMessageData/", userId, "") 
           reportNewUserToServer("trumpbot", userId, "iOS")
         }
       })
@@ -845,7 +845,7 @@ function listenForNewUserUpdates(platform) {
   })
 }
 
-function sendPushNotification(userIds, app_id,content) { 
+function sendPushNotification(userIds, app_id ,content) { 
   var restApiKey = 'N2Y2MWU1MDMtOTk3Zi00MDkzLWI3NjEtYTU0N2UwYjFjMGRh';
   if (app_id == undefined) {
     app_id = ['3fe58d49-2025-4653-912f-8067adbecd7f']
