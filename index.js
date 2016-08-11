@@ -824,7 +824,7 @@ function listenForNewUserUpdates(platform) {
         if (snapshot.numChildren() < 5) {
           console.log("LISTENING FOR New user UPDATES")
           addItemToFirebaseDatabase('trumpbot/' + platform + '/' + userId, "hasRecorded", true)
-          forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN!", "text", "trumpbot/IndividualMessageData/", userId, "") 
+          forwardMessageFromServerToUsers("trumpbot", "Hi I am Trump Bot I am going to MAKE TEXTING GREAT AGAIN! Tap on the star to see what I think about your friends, or message me!", "text", "trumpbot/IndividualMessageData/", userId, "") 
           forwardMessageFromServerToUsers("trumpbot", "I'm very busy, so it might take me a while to reply but I will definitely get back to you. Turn on push notifications so you know when you received my message?", "text", "trumpbot/IndividualMessageData/", userId, "") 
           reportNewUserToServer("trumpbot", userId, "iOS")
         }
