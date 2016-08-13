@@ -400,7 +400,7 @@ function getPushNotificationMessage(userId) {
   } else if (influencerId == 'trumpbot') {
     return "You have a new message from Donald Trump 😉"
   } else if (influencerId == 'indibot') {
-    return "You have a new message from Indi! 😬"
+    return "You have a new message from Indi! 💪😬🏋"
   } else {
     return "You just received a new message!"
   }
