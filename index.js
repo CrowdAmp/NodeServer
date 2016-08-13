@@ -397,9 +397,11 @@ function getPushNotificationMessage(userId) {
   influencerId = pushNotificationDict[userId][2]
   if (influencerId == 'belieberbot') {
     return "You have a new message from JB!"
-  } else if (influencerId = 'trumpbot') {
+  } else if (influencerId == 'trumpbot') {
     return "You have a new message from Donald Trump 😉"
-  } else {
+  } else if (influencerId == 'indibot') {
+    return "You have a new message from Indi! 😬"
+  }
     return "You just received a new message!"
   }
 }
