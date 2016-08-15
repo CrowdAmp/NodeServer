@@ -440,13 +440,16 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
     return
   }
 
-  //adds information regarding user payment
-  if (indiBotPurchaseIds.indexOf(userId) == -1) {
-    snapshotContent += "***"
-  }
+
 
   if (!userId) {
     userId = snapshot.child("senderId").val()
+  }
+  
+  //adds information regarding user payment
+  if (indiBotPurchaseIds.indexOf(userId) == -1) {
+    console.log("Adding *** for indiBot " + userId)
+    snapshotContent += "***"
   }
 
   try {
@@ -800,7 +803,7 @@ function listenForPushIdUpdates2() {
 
 function listenForIndiPurchases() {
   firebase.database().ref('/indibot/upgrades').on('child_added', function(snapshot) {
-    console.log("ADDING PURCHASE KEY")
+    console.log("ADDING PURCHASE KEY " + snapshot.key)
     indiBotPurchaseIds.push(snapshot.key)
   })
 }
