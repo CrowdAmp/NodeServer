@@ -109,13 +109,6 @@ var phoneNumberToInfluencerIdDict = {
   '+14155236444' : 'ChantellePaige',
   '+14155236301' : 'ChantellePaige'
 
-
-
-
-
-
-
-
 }
 var userContactInfoDict = {
   //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
@@ -132,6 +125,8 @@ var userContactInfoDict = {
   'trumpbot' : {}
 
 }
+
+var indiBotPurchaseIds = []
 
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
 
@@ -443,6 +438,11 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
     snapshotContent =  snapshot.child("fileName").val()
   } else {
     return
+  }
+
+  //adds information regarding user payment
+  if (indiBotPurchaseIds.indexOf(userId) == -1) {
+    snapshotContent += "***"
   }
 
   if (!userId) {
@@ -798,6 +798,13 @@ function listenForPushIdUpdates2() {
   })
 }
 
+function listenForIndiPurchases() {
+  firebase.database().ref('/indibot/upgrades').on('child_added', function(snapshot) {
+    console.log("ADDING PURCHASE KEY")
+    indiBotPurchaseIds.push(snapshot.key)
+  })
+}
+
 
 
 function listenForNewUserUpdates(platform) {
@@ -1118,6 +1125,7 @@ listenForMessageAll()
 listenForNewMessages();
 listenForGroupedMessages()
 listenForPushIdUpdates2() 
+listenForIndiPurchases()
 //spanmArnav()
 //sendTestRequest()
 
