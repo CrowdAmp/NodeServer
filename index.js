@@ -445,7 +445,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
   if (!userId) {
     userId = snapshot.child("senderId").val()
   }
-  
+
   //adds information regarding user payment
   if (indiBotPurchaseIds.indexOf(userId) == -1) {
     console.log("Adding *** for indiBot " + userId)
@@ -706,7 +706,7 @@ function listenForNewMessages() {
           if (!snapshot.child("hasBeenForwarded").val() && userContactInfo) {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
             sendAwayMessageIfNecessary(snapshot, influencerId)
-            if(influencerId == "indibot") {
+            if(influencerId == "indibot" && snapshot.child("sentByUser").val()) {
               sendMessageThroughTwilio("+13108670121", "+19804304321", "Indibpt just received a message, get off yo ass and reply!", "")
               sendMessageThroughTwilio("+15034966700", "+19804304321", "Indibot just received a message, tell Ruben or reply", "")
             }
