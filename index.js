@@ -667,6 +667,9 @@ var shouldSendAwayMessage = false
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
     forwardMessageFromServerToUsers(influencerId, "Hey, robots need sleep too! I'm away rignt now, but I'll get back to you as soon as I can ;)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+  } else if (shouldSendAwayMessage == true && influencerId == 'indibot') {
+    forwardMessageFromServerToUsers(influencerId, "Hey, bots need sleep too! I'm updating my servers right now, but I'll get back to you as soon as I can :)", "text", influencerId + "/IndividualMessageData/", snapshot.child("senderId").val(), "") 
+
   }
 }
 
