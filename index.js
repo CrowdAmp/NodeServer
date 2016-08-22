@@ -158,7 +158,7 @@ app.get('/test2', function(request, response) {
 });
 
 app.get('/indiapp', function(request, response) {
-    response.send("Indi the fitness bot");
+    response.redirect("https://itunes.apple.com/us/app/indi-the-fitness-bot/id1140304645?mt=8");
 });
 
 
