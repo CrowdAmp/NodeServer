@@ -157,6 +157,9 @@ app.get('/test2', function(request, response) {
     response.redirect("https://www.youtube.com/watch?v=1ekZEVeXwek");
 });
 
+app.get('/indiapp', function(request, response) {
+    response.send("Indi the fitness bot");
+});
 
 
 
