@@ -713,9 +713,9 @@ function listenForNewMessages() {
             forwardSnapshotToNLPDatabase(snapshot, influencerId)
             sendAwayMessageIfNecessary(snapshot, influencerId)
             if(influencerId == "indibot" && snapshot.child("sentByUser").val()) {
-              sendMessageThroughTwilio("+13108670121", "+19804304321", "Indibpt just received a message, get off yo ass and reply!", "")
-              sendMessageThroughTwilio("+16507223660", "+19804304321", "IndiBot just received a message. NO TYPOS", "")              
-              sendMessageThroughTwilio("+15034966700", "+19804304321", "Indibot just received a message, tell Ruben or reply", "")
+              //sendMessageThroughTwilio("+13108670121", "+19804304321", "Indibpt just received a message, get off yo ass and reply!", "")
+              //sendMessageThroughTwilio("+16507223660", "+19804304321", "IndiBot just received a message. NO TYPOS", "")              
+              //sendMessageThroughTwilio("+15034966700", "+19804304321", "Indibot just received a message, tell Ruben or reply", "")
             }
           }
           if (userContactInfo && !snapshot.child('hasBeenForwarded').val()) {
