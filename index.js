@@ -22,9 +22,10 @@ var sha = require('./sha1.js');
 var app = express()
 
 
-
+//Used for iOS push notifications with OneSignal Module. each entry represents a differen app. 
 var pushNotificationDict = {"AlexRamos" : "8e70c1e0-d3ce-43a7-8a69-79477762bf33"}
 
+//Dict used to keep track of total fans and total messages for each influencer, used to report this within the iOS App: [total fans, total messages, 1]
 var influencerMetricsDict = {
   "AlexRamos" : [0,0,1],
   'rmayer9999' : [0,0,1],
@@ -36,9 +37,10 @@ var influencerMetricsDict = {
   'jvrionis' : [0,0,1],
   'ChantellePaige' : [0,0,1],
   'indibot' : [0,0,1],
-  'trumpbot' : [0,0,1]//total fans, total messages
+  'trumpbot' : [0,0,1]//
 }
 
+//Stores the user-facing name for each influencer
 var influencerIdToNameDict = { 
   'AlexRamos' : "Alex Ramos",
   'rmayer9999' : "Ruben Mayer",
@@ -55,6 +57,9 @@ var influencerIdToNameDict = {
 
 //var groupedMessageTestIds = ["+13108670121"] //"+15034966700"
 
+/*Stores which phone number corresponds to which influencer. 
+Each influencer has several phone numbers because twilio rate limits 
+total messages that can be sent by each influencer */
 var phoneNumberToInfluencerIdDict = {
   "+19804304321" : "electionfails",
   "+12512654321" : "electionfails",
@@ -111,6 +116,16 @@ var phoneNumberToInfluencerIdDict = {
   '+14155236301' : 'ChantellePaige'
 
 }
+
+/* IMPORTANT:
+  Stores the contact info for all the users in live memory. Each influencer has its own
+  sub - dictionary. The makeup of this dict:
+
+  {influencerId : { userId : [ isUsingApp // this boolean is true if the user is using iOS app, false otherwise , userId // either phone number or app id] }}
+  
+  The dict is populated when the program starts up, in the function listenForNewMessages
+  Using live memory is a problem... not scalable, already reached limit 
+*/
 var userContactInfoDict = {
   //'influencerId' : {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
   'AlexRamos' : {},
@@ -129,6 +144,7 @@ var userContactInfoDict = {
 
 var indiBotPurchaseIds = []
 
+//URL of python server
 var serverUrl = "https://fierce-forest-11519.herokuapp.com/"
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -139,6 +155,7 @@ app.use(bodyParser.json())
 var messageCount = 0
 
 
+//Test Func
 var test1 = 0
 app.get('/test1', function(request, response) {
   test1 += 1
@@ -146,6 +163,7 @@ app.get('/test1', function(request, response) {
     response.redirect("https://morgan-katherine-makeup.myshopify.com/products/personal-make-up-kit");
 });
 
+//For full bots, changes value shoyldSendAwayMessage. If shouldSendAwayMessage == true, the bot sends a message like "I am asleep"
 app.get('/changeAwayVariable', function(request, response) {
   shouldSendAwayMessage = !shouldSendAwayMessage
   response.send("The value of the away variable is " + shouldSendAwayMessage);
@@ -172,7 +190,7 @@ app.get('/', function(request, response) {
 });
 
 
-
+//Allows users to log in with twitter the userId parameter is used to store user-specific twitter credentials through callback
 var _requestSecret = undefined
 app.get('/twitterLogin/:userId', function(req, res) {
 var twitter = new Twitter({
@@ -191,6 +209,7 @@ var twitter = new Twitter({
   });
 })
 
+//Sends a message to users prompting for a Login with Twitter
 app.get('/promptTwitterLogin/:influencerId/:message', function(req, res) {
   for(var key in userContactInfoDict[influencerId]) {
     timeout += 500
@@ -201,6 +220,8 @@ app.get('/promptTwitterLogin/:influencerId/:message', function(req, res) {
   res.sendStatus(200)
 })
 
+//Twitter callback, Twitter calls it after a user is logged in succesfully, 
+//stores user twiter credentials on firebase and send thank you message.
 app.get('/twitterCallback/:userId', function(req, res) {
   var twitter = new Twitter({
         consumerKey: "BF2zgayzrJs0Ee6BYmHeX1ZkZ",
@@ -230,17 +251,39 @@ app.get('/twitterCallback/:userId', function(req, res) {
       });
   });
 
-
+//Endpoint used by iOS app to get total fans by influencerId
 app.get('/getTotalFans/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
   response.send(influencerMetricsDict[request.params.id][0].toString())
 })
+
+//Endpoint used by iOS app to get total messages by influencerId
+app.get('/getTotalMessages/:id', function(request, response) {
+    response.send(influencerMetricsDict[request.params.id][1].toString())
+})
  
+//Endpoint used by iOS app to know how many unread "grouped messages" each influencer has
+app.get('/getNewMessages/:id', function(request, response) {
+  var totalUnreadMessages = 0
+  firebase.database().ref("/" + request.params.id + "/GroupedMessageData").once('value', function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      if (childSnapshot.child('influencerDidRead').val() == false) {
+        totalUnreadMessages += 1
+      }
+    })
+    response.send(totalUnreadMessages.toString())
+  })
+    //response.send(influencerMetricsDict[request.params.id][2].toString())
+})
+
+//Used for Facebook invites, not really relevant anymore.  
 app.get('/didShare/:id', function(request, response) {
   console.log("GET TOTAL FANS: " + influencerMetricsDict[request.params.id])
   response.send("20")
 })
 
+//This endpoint is used when users authorize the app to tweet automatically them, or to remove this authorization
+//Authorization data is stored on Twitter
 app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(request, response) {
   var influencerId = request.params.influencerid
   var userId = request.params.id
@@ -257,29 +300,15 @@ app.get('/updateTwitterAuthorization/:influencerid/:id/:status', function(reques
   response.send("Changed Status of " + userId + " to " + authStatus + " " + influencerId)
 })
 
-app.get('/getTotalMessages/:id', function(request, response) {
-    response.send(influencerMetricsDict[request.params.id][1].toString())
-})
-
-app.get('/getNewMessages/:id', function(request, response) {
-  var totalUnreadMessages = 0
-  firebase.database().ref("/" + request.params.id + "/GroupedMessageData").once('value', function(snapshot) {
-    snapshot.forEach(function(childSnapshot) {
-      if (childSnapshot.child('influencerDidRead').val() == false) {
-        totalUnreadMessages += 1
-      }
-    })
-    response.send(totalUnreadMessages.toString())
-  })
-    //response.send(influencerMetricsDict[request.params.id][2].toString())
-})
-
+//Test notification
 app.post('/test', function(request, response) {
     console.log(request.body)
     console.log(request.body.content)
     response.sendStatus(200)
 })
 
+//Endpoint called by Python server to send the influencer a new "grouped message". 
+//E.g. if 150 users say "What is your dog's name?" the Python server would call this endpoint prompting the influencer for a response
 app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
   console.log(request.body)
   var content = request.body.content
@@ -295,6 +324,33 @@ app.post('/shouldPromptInfluencerForAnswer', function(request, response) {
 
 })
 
+//Uses Firebase to send "grouped message" to influencer 
+function sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId) {
+  
+  var conversationItemDict = {
+    "conversationTitle" : "Message from " + numberOfUsers + " fans",
+  }
+
+  var messageItemDict = {
+        "text": content,
+        "senderId": phraseId,
+        "sentByUser": true,
+        "type": "text",
+        "fileName": "",
+        "mediaDownloadUrl": ""
+    }
+
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/", phraseId, conversationItemDict)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "influencerDidRead", false)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
+  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, undefined ,messageItemDict)
+
+}
+
+
+//Endpoint called by the Python server to send a message to a list of users 
+//Used to reply to users. 
+//TODO: add rate limmiting 
 app.post('/shouldSendMessageToUsers', function(request, response) {
   var content = request.body.content
   console.log("CONTENT: " + content)
@@ -313,39 +369,8 @@ app.post('/shouldSendMessageToUsers', function(request, response) {
 
 })
 
-app.get('/testPushNotifications', function(request, response) {
-  sendPushNotification(["ec178ffe-5005-4a6b-bb62-80f4d640c515", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
-  response.sendStatus(200)
-})
-
-//TODO report new users from app
-function reportNewUserToServer(influencerId, userId, device) {
-  reqUrl = serverUrl + "recordNewUser"
-  console.log("reportingNewUserToServer")
-  try {
-    requests({
-      url: reqUrl,
-      method: "POST",
-      json: { 
-         userId : userId,
-         influencerId: influencerId,
-         device: device
-       },
-    },function (error, response, body) {
-          if (!error) {
-            console.log("response: " + response.body.content)
-          } else {
-            console.log("error reporting new user: " + error)
-          }
-      });
-
-  } catch(err) {
-    console.log("Error with request: " + err)
-  }
-
-}
-
-
+//Sends message that came from server to users by adding to Firebase
+//If user is connected via SMS, uses Twilio API
 function forwardMessageFromServerToUsers(influencerId, content, type, firebasePath, userId, mediaDownloadUrl) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
   var messageItemDict = {}
@@ -392,6 +417,39 @@ function forwardMessageFromServerToUsers(influencerId, content, type, firebasePa
   }
 }
 
+app.get('/testPushNotifications', function(request, response) {
+  sendPushNotification(["ec178ffe-5005-4a6b-bb62-80f4d640c515", "8e70c1e0-d3ce-43a7-8a69-79477762bf33"], "Notification from Online!")
+  response.sendStatus(200)
+})
+
+//Calls endpoint in Python server to create a new user 
+function reportNewUserToServer(influencerId, userId, device) {
+  reqUrl = serverUrl + "recordNewUser"
+  console.log("reportingNewUserToServer")
+  try {
+    requests({
+      url: reqUrl,
+      method: "POST",
+      json: { 
+         userId : userId,
+         influencerId: influencerId,
+         device: device
+       },
+    },function (error, response, body) {
+          if (!error) {
+            console.log("response: " + response.body.content)
+          } else {
+            console.log("error reporting new user: " + error)
+          }
+      });
+
+  } catch(err) {
+    console.log("Error with request: " + err)
+  }
+
+}
+
+//Used to send app-specific iOS push notification messages
 function getPushNotificationMessage(userId) {
   influencerId = pushNotificationDict[userId][2]
   if (influencerId == 'belieberbot') {
@@ -406,7 +464,7 @@ function getPushNotificationMessage(userId) {
 }
 
 
-
+//TESTING FUNC, not used
 app.get('/sendRequest', function(request, response) {
 console.log("shouldSendRequest")
 reqUrl = serverUrl + "test"
@@ -431,6 +489,8 @@ try {
   response.send(200)
 })
 
+//Forwards Firebase data snapshots to Python Server
+//Used when user or influencer sends a message from the iOS app, so that the data is stored and processed by the NLP server 
 function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
   console.log("shouldForwardSnapshotToNLPDatabase " + snapshot.child("text").val())
   reqUrl = serverUrl +  "didReceiveMessage"
@@ -485,6 +545,7 @@ function forwardSnapshotToNLPDatabase(snapshot, influencerId, userId) {
 
 }
 
+//When an influencer responds to a "grouped message" this is forwarded on to the Python Server. 
 function postInfluencerDidRespondToPrompt(influencerId, snapshot) {
   console.log("PostingInfluencerDidRespondToPrompt request")
   var reqUrl = serverUrl + "influencerDidRespondToPrompt"
@@ -524,7 +585,7 @@ function postInfluencerDidRespondToPrompt(influencerId, snapshot) {
   }
 }
 
-
+//Initializes connection with Firebase database
 firebase.initializeApp({
   databaseURL: 'https://crowdamp-messaging.firebaseio.com',
   serviceAccount: path.join(__dirname + '/CrowdAmpMessaging-5e5474ce420c.json')
@@ -533,7 +594,7 @@ firebase.initializeApp({
   //app.use('/static', express.static('indexx'))
   //response.send('Hello00 World!')
 
-
+//API point used by twilio. Sends voice messages for users that call the number. 
 app.post('/twiliovoice', function(request,response) {
 
   var twiml = new twilioForTwiml.TwimlResponse();
@@ -555,31 +616,7 @@ var conversationId = "33PeopleSent"
 var messageText = "When is your next vine coming out?"
 
 
-
-function sendGroupedConversationToInfluencer(influencerId, content, numberOfUsers, phraseId) {
-  
-  var conversationItemDict = {
-    "conversationTitle" : "Message from " + numberOfUsers + " fans",
-  }
-
-  var messageItemDict = {
-        "text": content,
-        "senderId": phraseId,
-        "sentByUser": true,
-        "type": "text",
-        "fileName": "",
-        "mediaDownloadUrl": ""
-    }
-
-  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/", phraseId, conversationItemDict)
-  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "influencerDidRead", false)
-  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, "timestamp", firebase.database.ServerValue.TIMESTAMP)
-  addItemToFirebaseDatabase("/" + influencerId + "/GroupedMessageData/" +  phraseId, undefined ,messageItemDict)
-
-}
-
-
-
+//Uses Firebase api to listen for any 'grouped message' updates, and forward to corresponding servers or users
 function listenForGroupedMessages() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerName = snapshot.key
@@ -587,7 +624,7 @@ function listenForGroupedMessages() {
       var snapshotPath = '/' + influencerName + '/GroupedMessageData' + '/' + snapshot.key 
       firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
         if (!snapshot.child("hasBeenForwarded").val() && !snapshot.child("sentByUser").val() && snapshot.child("type").val()) {
-          addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) 
+          addItemToFirebaseDatabase(snapshotPath + "/" + snapshot.key, "hasBeenForwarded", true) //Prevents messages from being forwarded twice 
           if (!snapshot.child("sentByUser").val()) { //Checks that text was sent by influencer
             console.log(snapshot.child("senderId").val())
               postInfluencerDidRespondToPrompt(influencerName, snapshot)
@@ -598,6 +635,8 @@ function listenForGroupedMessages() {
   })
 }
 
+//Forwards firebase data snapshot message to relevant users. Used for "message all"
+//If users are not using iOS app, also forwards via SMS message
 function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influencerId) {
   console.log("forwardingFirebaseSnapshotToUsers, userId: " + userId)
   forwardSnapshotToNLPDatabase(snapshot, influencerId, userId)
@@ -618,13 +657,14 @@ function forwardFirebaseSnapshotToUsers(snapshot, firebasePath, userId, influenc
   }  
 }
 
+//Rate limmited messaging forwarding. Only used by Twitter
 function staggeredForwardMessageFromServerToUsers(timeout, influencerId, content, type, firebasePath , userId, imageDownload) {
   setTimeout(function() {
     forwardMessageFromServerToUsers(influencerId, content, type, firebasePath, userId, "")
   }, timeout)
 }
 
-
+//Sends message and push notification to users. 
 function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
     var userId = key
     setTimeout(function() {
@@ -635,6 +675,8 @@ function sendStaggeredMessage(key, timeout, snapshot, influencerId) {
   }, timeout)
 }
 
+//Checks for any changes in the "message all" firebase database. If an influencer has sent a "message all," takes care of forwarding
+//the message to all their fans. 
 function listenForMessageAll() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
@@ -644,10 +686,15 @@ function listenForMessageAll() {
           console.log("ListeningForMessageAll " + snapshot.key + Object.keys(userContactInfoDict[influencerId]))
         if (!snapshot.child("sentByUser").val()) {
           var timeout = 0
+
+          //Rate limmiting prevents Twilio from rejecting requests 
           for(var key in userContactInfoDict[influencerId]) {
             timeout += 500
             sendStaggeredMessage(key, timeout, snapshot, influencerId)
           }
+          
+          //Once message has been sent, sends confirmation to influencer. 
+
           var sendToAllResponseDict = {
                   "text": "Message sent succesfully to " + Object.keys(userContactInfoDict[influencerId]).length + " fans.",
                   "senderId": "sendToAll",
@@ -667,6 +714,7 @@ function listenForMessageAll() {
   })
 }
 
+//Used for bots, sends away message if necessary 
 var shouldSendAwayMessage = false
 function sendAwayMessageIfNecessary(snapshot, influencerId) {
   if (shouldSendAwayMessage == true && influencerId == 'belieberbot') {
@@ -677,7 +725,12 @@ function sendAwayMessageIfNecessary(snapshot, influencerId) {
   }
 }
 
-
+//Checks firebase for new messages on the user end (IndividualMessageData endpoint)
+//Runs through entire database on startup, and adds user info to userContactInfoDict
+//Keeps track of wether messages have been forwarded before if they have not:
+// - sends SMS to users if they are not on app
+// - sends message info to Python DB
+// - Marks the message as "forwarded" 
 function listenForNewMessages() {
   firebase.database().ref('/').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
@@ -698,7 +751,6 @@ function listenForNewMessages() {
       var snapshotPath = influencerId + '/IndividualMessageData' + '/' + snapshot.key
       console.log(snapshotPath)
   		firebase.database().ref(snapshotPath).on('child_added', function(snapshot) {
-  			 //sendMessageToUser(snapshotPath ,snapshot.key, snapshot.child('text').val(), 'text')
       		console.log("LISTENING FOR MESSAGE: " + snapshot.child("text").val())
           console.log("senderId: " + snapshot.child("senderId").val())
 
@@ -753,7 +805,7 @@ function addItemToFirebaseDatabase(referencePath, itemId, itemDictionary) {
 }
 }
 
-
+// Not used 
 function sendMessageToUser(snapshotPath,userId, messageContent, messageType) {
   messageRef = firebase.database().ref(snapshotPath).push()
 	var messageItem = {
@@ -771,6 +823,7 @@ function sendMessageToUser(snapshotPath,userId, messageContent, messageType) {
 var onesignal = require('node-opensignal-api');
 var onesignal_client = onesignal.createClient();
  
+//populates pushID dict. PushIDs2 is called like that because ids were migrated  
 function listenForPushIdUpdates() {
   firebase.database().ref('/PushIds').on('child_added', function(snapshot) {
     var influencerId = snapshot.key
@@ -809,6 +862,7 @@ function listenForPushIdUpdates2() {
   })
 }
 
+//Used for a specific app test, measured purchases
 function listenForIndiPurchases() {
   firebase.database().ref('/indibot/upgrades').on('child_added', function(snapshot) {
     console.log("ADDING PURCHASE KEY " + snapshot.key)
@@ -817,7 +871,7 @@ function listenForIndiPurchases() {
 }
 
 
-
+//Sends intro messages to full bot apps
 function listenForNewUserUpdates(platform) {
   firebase.database().ref('belieberbot/' + platform).on('child_added', function(snapshot) {
     var userId = snapshot.key
@@ -865,6 +919,7 @@ function listenForNewUserUpdates(platform) {
   })
 }
 
+//Uses OneSignal SDK for iOS push notifications 
 function sendPushNotification(userIds, app_id ,content) { 
   var restApiKey = 'N2Y2MWU1MDMtOTk3Zi00MDkzLWI3NjEtYTU0N2UwYjFjMGRh';
   if (app_id == undefined) {
@@ -897,7 +952,9 @@ app.post('/twiliowebhookoutbound/', function (req, res) {
         //res.sendStatus(200)                                                                                                                   
 });
 
-//receives inbound message requests from twilio
+/*receives inbound message requests from twilio, if the message is from a new user, sends intro message and
+assings a phone number to the new user. 
+*/
 app.post('/twiliowebhook/', function (req, res) {
     console.log("MESSAGE BODY " + req.body.Body)
     if (req.body.Body != undefined) {
@@ -977,24 +1034,16 @@ function phoneNumberFormatter(phoneNumber) {
   }
 }
 
+//Sends influencer-specific introductory messages 
 function sendIntroFlow(req, phoneNumberToSendFrom) {
   if (req.body.To == '+12562026194') {
     forwardMessageFromServerToUsers("jvrionis", "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about cool deals I'm working on. Sound cool?", "text", "jvrionis/IndividualMessageData/", req.body.From, "") 
 
 
-    //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! this is John, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "")
   } else if (req.body.To == '+14155236304') {
     forwardMessageFromServerToUsers("ChantellePaige", "Hey! This is Chantelle, thanks for messaging me. I'm so excited to chat! I'll try to get back to you asap!!! :D And guess what!?! I have some exciting new stuff going on, wanna hear about it? ;)", "text", "ChantellePaige/IndividualMessageData/", req.body.From, "") 
   } else if (req.body.To == '+16506678787') {
     forwardMessageFromServerToUsers("morggkatherinee", "Hey! this is Morgan, thanks for messaging me! I will try to answer messages as soon as I can :) Also, I can send you updates about what I'm up to. Sound cool?", "text", "morggkatherinee/IndividualMessageData/", req.body.From, "") 
-
-    //setTimeout(function() {
-     // sendMessageThroughTwilio(req.body.From, req.body.To, "", "http://magnuscarlsen.com/assets/IMG_6405-e1417594107254-1024x919.jpg")
-    //setTimeout(function() {
-    //  sendMessageThroughTwilio(req.body.From, req.body.To, "I can also send you regular updates about Magnus' Life, and the things he posts on social media. Would you like that?", "")
-    //}, 20000);
-    //}, 10000);
-    //forwardMessageFromServerToUsers('electionfails', 'magnus', 'text', firebasePath, req.body.From, '')
 
   } else if (req.body.To == '+18608214181'){ 
     //sendMessageThroughTwilio(req.body.From, phoneNumberToSendFrom, "Hey! It's Kyle Exum. I'll try to respond to your messages when I can :)", "")
@@ -1014,7 +1063,7 @@ function sendIntroFlow(req, phoneNumberToSendFrom) {
   }
 }
 
-
+//Calls twilio API to send text message 
 function sendMessageThroughTwilio(to, from, text, media) {
   console.log("sending messageFromTwilio: " + to + from + text + media)
   console.log(media == "")
@@ -1060,6 +1109,7 @@ function sendMessageThroughTwilio(to, from, text, media) {
 
 }
 
+//Not called much
 function registerNewUsers() {
  // {"userId" : ["isUsingApp", "twilioSendNumber/AppNotificationId"]}
  console.log("registering new users")
@@ -1072,6 +1122,7 @@ function registerNewUsers() {
   }
 }
 
+//Interacts with Twitter API to publish tweets 
 function sendTweet(screenName, userToken, userSecret, content, containsMedia, mediaFileName) {
 
 var a = new oauth.OAuth("https://twitter.com/oauth/request_token",
@@ -1115,6 +1166,7 @@ if (containsMedia) {
   }
 }
 
+//Sends a twitter message for every registered user. only ever implemented for belieberbot
 function tweetAll(message, containsFile, fileName) {
   firebase.database().ref("/belieberbot/TwitterData").once('value', function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
@@ -1127,8 +1179,7 @@ function tweetAll(message, containsFile, fileName) {
   })
 }
 
-//tweetAll("",false,"")
-//sendTweet("3396657973-zFFpo1XnkpZF9irlbJGE61WrbryQ8Mi8vJfRNH9","uXI1HaGzzUWWzRuNf4FCblcxzB5fpdW1I01ZoDK0y0hCW", "Heyyyyyy!", true, "./twittergif.gif")
+//Main:
 listenForNewUserUpdates("TwitterData")
 listenForNewUserUpdates("FacebookData")  
 listenForPushIdUpdates()
@@ -1140,15 +1191,15 @@ listenForIndiPurchases()
 //spanmArnav()
 //sendTestRequest()
 
-
+//LOL used to troll fiends 
 function staggeredSpam(timeout, key) {
   setTimeout(function() {
     sendMessageThroughTwilio('+16507969353', key, "Never tag me on facebook again you Bitch", "")  
   }, timeout)
 }
 
-
-function spanmArnav() {
+// ^ same as previous (this is my friend Arnav that I was telling you about hahaah)
+function spamArnav() {
   var timeout = 0
   for (key in phoneNumberToInfluencerIdDict) {
     console.log(key)
@@ -1156,46 +1207,6 @@ function spanmArnav() {
     timeout += 10000
   }
 }
-
-//sendMessageToUser("/MessageData/mgOVbPwSaPNxAskRztKFGZoTSqz1","-KKlIa_WDOmwDyloSPPD","heyyyyy", "text")
-//sendPushNotification(["1281818c-705b-4c7c-ac4c-4c6a951af928"], "Notification from Online!")
-
-
-  /*
-  url = "https://upload.twitter.com/1.1/media/upload.json"
-  var consumerSecret = "YOKrZCJO5ZLNYt4riMCQXhk3ToIZSnay90YX1JMXFeLUC3TLmj"
-  var oauth_consumer_key = "BF2zgayzrJs0Ee6BYmHeX1ZkZ"
-  //User specific
-  var tokenSecret = "uXI1HaGzzUWWzRuNf4FCblcxzB5fpdW1I01ZoDK0y0hCW"
-  var oauth_token = "3396657973-zFFpo1XnkpZF9irlbJGE61WrbryQ8Mi8vJfRNH9"
-  var oauth_params = {
-        consumer_key: oauth_consumer_key,
-        consumer_secret: consumerSecret,
-        token: oauth_token,
-        token_secret: tokenSecret
-      };
-
-  var a = requests.post({url:url, oauth:oauth_params, media:fs.readFileSync('./twittergif.gif').toString("base64")} ,"" , function (e, data, res){
-      if (e) {
-          console.error(e);
-      }else {
-          try{
-              console.log(res)
-              data = JSON.parse(data);
-          }catch (e){
-              console.error("Error Json : " + e);
-          }
-          console.log(data.media_id);
-
-          // a.post("https://api.twitter.com/1.1/statuses/update.json", oauth_access_token, oauth_access_token_secret, {status:message,media_ids:[data.media_id_string]}, "", function (e, data, res){
-          //     if (e) {
-          //         console.error(e);
-          //     }else {
-          //         console.log("Success");
-          //     }
-          // });
-      }
-  });*/
 
 
 
